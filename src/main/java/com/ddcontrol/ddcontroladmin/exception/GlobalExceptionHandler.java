@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -35,6 +36,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage()));
     }
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleResponseStatus(ResponseStatusException ex) {
+        return ResponseEntity.status(ex.getStatusCode())
+                .body(new ErrorResponse(ex.getStatusCode().value(), ex.getReason()));
+    }
 
     // 422 - errores de validación de @Valid
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -51,12 +57,11 @@ public class GlobalExceptionHandler {
     // 500 - cualquier otro error no controlado
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
+        ex.printStackTrace(); // ← añade esto
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        "Error interno del servidor"));
+                        ex.getClass().getSimpleName())); // ← y esto
     }
-
-    // ── records de respuesta ─────────────────────────────────────────────────
 
     public record ErrorResponse(int status, String mensaje, Instant timestamp) {
         public ErrorResponse(int status, String mensaje) {

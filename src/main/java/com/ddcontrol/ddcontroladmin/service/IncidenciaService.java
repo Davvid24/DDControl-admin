@@ -75,8 +75,6 @@ public class IncidenciaService {
         incidenciaRepository.deleteById(id);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
-
     private Incidencia getOrThrow(Integer id) {
         return incidenciaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Incidencia no encontrada: " + id));

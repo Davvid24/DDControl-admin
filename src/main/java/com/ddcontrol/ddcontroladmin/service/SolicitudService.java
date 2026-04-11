@@ -77,8 +77,6 @@ public class SolicitudService {
         solicitudRepository.deleteById(id);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
-
     private Solicitud getOrThrow(Integer id) {
         return solicitudRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Solicitud no encontrada: " + id));

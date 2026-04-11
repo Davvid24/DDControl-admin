@@ -59,8 +59,6 @@ public class EmpresaService {
         empresaRepository.deleteById(id);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
-
     private Empresa getOrThrow(Integer id) {
         return empresaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Empresa no encontrada: " + id));

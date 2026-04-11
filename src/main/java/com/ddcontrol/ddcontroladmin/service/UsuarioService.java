@@ -91,8 +91,6 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
-
     private Usuario getOrThrow(Integer id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado: " + id));

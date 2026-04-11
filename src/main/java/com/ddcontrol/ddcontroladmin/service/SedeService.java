@@ -71,8 +71,6 @@ public class SedeService {
         sedeRepository.deleteById(id);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
-
     private Sede getOrThrow(Integer id) {
         return sedeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Sede no encontrada: " + id));

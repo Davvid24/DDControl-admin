@@ -67,8 +67,6 @@ public class TurnoService {
         turnoRepository.deleteById(id);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
-
     private Turno getOrThrow(Integer id) {
         return turnoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Turno no encontrado: " + id));

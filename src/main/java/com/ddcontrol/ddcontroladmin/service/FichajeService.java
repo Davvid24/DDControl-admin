@@ -91,11 +91,7 @@ public class FichajeService {
         fichajeRepository.deleteById(id);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
 
-    /**
-     * Fórmula de Haversine para calcular distancia entre dos coordenadas (metros).
-     */
     private boolean calcularDentroDeRadio(BigDecimal latR, BigDecimal lonR,
                                            BigDecimal latS, BigDecimal lonS,
                                            Integer radioMetros) {

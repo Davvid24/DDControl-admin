@@ -50,7 +50,6 @@ public class JustificanteService {
         justificanteRepository.deleteById(id);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
 
     private Justificante getOrThrow(Integer id) {
         return justificanteRepository.findById(id)

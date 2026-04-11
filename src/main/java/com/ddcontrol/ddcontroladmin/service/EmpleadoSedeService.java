@@ -65,8 +65,6 @@ public class EmpleadoSedeService {
         empleadoSedeRepository.deleteById(pk);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
-
     private EmpleadoSedeDTO.Response toResponse(EmpleadoSede es) {
         EmpleadoSedeDTO.Response r = new EmpleadoSedeDTO.Response();
         r.setIdUsuario(es.getIdUsuario().getId());

@@ -74,8 +74,6 @@ public class HorarioAsignadoService {
         horarioRepo.deleteById(id);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
-
     private HorarioAsignado getOrThrow(Integer id) {
         return horarioRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("HorarioAsignado no encontrado: " + id));
