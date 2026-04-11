@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empleados — D&D Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body data-page="empleados">
+<div class="app">
+    <nav class="sidebar">
+        <div class="brand"><div class="brand-icon">DD</div><span class="brand-name">D&D Control</span></div>
+        <div class="nav-section"><span class="nav-label">Principal</span>
+            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt="Dashboard">Dashboard</a>
+            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt="Fichajes">Fichajes</a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt="Solicitudes">Solicitudes<span class="nav-badge">4</span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt="Incidencias">Incidencias<span class="nav-badge">2</span></a>
+        </div>
+        <div class="nav-section"><span class="nav-label">Gestión</span>
+            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt="Empleados">Empleados</a>
+            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt="Sedes">Sedes</a>
+            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt="Turnos">Turnos</a>
+            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt="Informes">Informes</a>
+        </div>
+        <div class="nav-section"><span class="nav-label">Sistema</span>
+            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt="Configuración">Configuración</a>
+        </div>
+        <div class="sidebar-spacer"></div>
+        <div class="user-chip">
+            <div class="avatar">AC</div>
+            <div class="user-info"><div class="user-name">Admin Central</div><div class="user-role">Administrador</div></div>
+            <div class="btn-icon" onclick="doLogout()"><img src="icons/logout-svgrepo-com.svg" alt="Cerrar sesión"></div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="topbar">
+            <h1>Empleados</h1>
+            <div class="topbar-spacer"></div>
+            <select id="filtroRol"><option value="">Todos los roles</option><option>Empleado</option><option>Supervisor</option><option>Admin</option></select>
+            <select id="filtroSede"><option value="">Todas las sedes</option><option>Sede Central</option><option>Sede Norte</option><option>Sede Sur</option></select>
+            <button class="btn btn-primary" onclick="openModal('modal-empleado')">+ Nuevo empleado</button>
+        </div>
+        <div style="flex:1;overflow-y:auto;background:white">
+            <table id="empleadosTable">
+                <thead><tr><th>Empleado</th><th>Departamento</th><th>Sede(s)</th><th>Turno</th><th>Estado</th><th>Último fichaje</th><th>Acciones</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL EMPLEADO -->
+<div class="modal-overlay" id="modal-empleado">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title" id="modal-emp-title">Nuevo empleado</span>
+            <button class="modal-close" onclick="closeModal('modal-empleado')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid form-2col">
+                <div class="field"><label>Nombre</label><input type="text" id="empNombre" placeholder="Nombre"></div>
+                <div class="field"><label>Apellidos</label><input type="text" id="empApellidos" placeholder="Apellidos"></div>
+                <div class="field form-full"><label>Email</label><input type="email" id="empEmail" placeholder="empleado@empresa.com"></div>
+                <div class="field"><label>Contraseña</label><input type="password" id="empPass" placeholder="••••••••"></div>
+                <div class="field"><label>Teléfono</label><input type="tel" id="empTel" placeholder="600000000"></div>
+                <div class="field"><label>Rol</label><select id="empRol"><option>Empleado</option><option>Supervisor</option><option>Admin</option></select></div>
+                <div class="field"><label>Tipo empleado</label><select id="empTipo"><option>Jornada completa</option><option>Media jornada</option><option>Externo</option></select></div>
+                <div class="field"><label>Sede</label><select id="empSede"><option>Sede Central</option><option>Sede Norte</option><option>Sede Sur</option></select></div>
+                <div class="field"><label>Departamento</label><input type="text" id="empDepto" placeholder="Ej: Ventas"></div>
+                <div class="field"><label>Turno</label><select id="empTurno"><option>Mañana L-V</option><option>Tarde L-V</option><option>Partido</option></select></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('modal-empleado')">Cancelar</button>
+            <button class="btn btn-primary" onclick="guardarEmpleado()">Crear empleado</button>
+        </div>
+    </div>
+</div>
+
+<script src="shared.js"></script>
+<script src="empleados.js"></script>
+</body>
+</html>

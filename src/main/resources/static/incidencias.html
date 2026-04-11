@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incidencias — D&D Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body data-page="incidencias">
+<div class="app">
+    <nav class="sidebar">
+        <div class="brand"><div class="brand-icon">DD</div><span class="brand-name">D&D Control</span></div>
+        <div class="nav-section"><span class="nav-label">Principal</span>
+            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt="Dashboard">Dashboard</a>
+            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt="Fichajes">Fichajes</a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt="Solicitudes">Solicitudes<span class="nav-badge">4</span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt="Incidencias">Incidencias<span class="nav-badge">2</span></a>
+        </div>
+        <div class="nav-section"><span class="nav-label">Gestión</span>
+            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt="Empleados">Empleados</a>
+            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt="Sedes">Sedes</a>
+            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt="Turnos">Turnos</a>
+            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt="Informes">Informes</a>
+        </div>
+        <div class="nav-section"><span class="nav-label">Sistema</span>
+            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt="Configuración">Configuración</a>
+        </div>
+        <div class="sidebar-spacer"></div>
+        <div class="user-chip">
+            <div class="avatar">AC</div>
+            <div class="user-info"><div class="user-name">Admin Central</div><div class="user-role">Administrador</div></div>
+            <div class="btn-icon" onclick="doLogout()"><img src="icons/logout-svgrepo-com.svg" alt="Cerrar sesión"></div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="topbar">
+            <h1>Incidencias</h1>
+            <div class="topbar-spacer"></div>
+            <button class="btn btn-ghost">Ver historial</button>
+        </div>
+        <div class="scroll-body page-enter">
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#FEE8EA"><img src="icons/alert-svgrepo-com.svg" alt="Pendientes hoy"></div>
+                    <div class="stat-value" id="cnt-pendientes">2</div>
+                    <div class="stat-label">Pendientes hoy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#FFF8E6"><img src="icons/gps-map-camera-svgrepo-com.svg" alt="Fuera de radio GPS"></div>
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Fuera de radio GPS</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#FFF8E6"><img src="icons/bell-slash-svgrepo-com.svg" alt="Olvidos de salida"></div>
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Olvidos de salida</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#E8FAF2"><img src="icons/tick-checkbox-svgrepo-com.svg" alt="Resueltas esta semana"></div>
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">Resueltas esta semana</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Incidencias abiertas</span></div>
+                <div class="table-wrap">
+                    <table id="incidenciasTable">
+                        <thead><tr><th>Tipo</th><th>Empleado</th><th>Descripción</th><th>Fecha / Hora</th><th>Estado</th><th>Acciones</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="shared.js"></script>
+<script src="incidencias.js"></script>
+</body>
+</html>

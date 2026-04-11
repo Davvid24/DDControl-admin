@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turnos — D&D Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .turnos-layout { display:flex; gap:20px; align-items:flex-start; }
+        .turnos-table { flex:1; min-width:0; }
+        .turnos-form  { width:300px; flex-shrink:0; }
+        .day-toggles  { display:flex; gap:6px; }
+        .day-btn {
+            width:34px; height:34px; border-radius:var(--radius-sm);
+            border:none; font-family:var(--font); font-size:13px; font-weight:700;
+            cursor:pointer; transition:all var(--transition);
+        }
+        .day-on  { background:var(--blue);       color:white; }
+        .day-off { background:var(--blue-light); color:var(--text-muted); }
+    </style>
+</head>
+<body data-page="turnos">
+<div class="app">
+    <nav class="sidebar">
+        <div class="brand"><div class="brand-icon">DD</div><span class="brand-name">D&D Control</span></div>
+        <div class="nav-section"><span class="nav-label">Principal</span>
+            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt="Dashboard">Dashboard</a>
+            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt="Fichajes">Fichajes</a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt="Solicitudes">Solicitudes<span class="nav-badge">4</span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt="Incidencias">Incidencias<span class="nav-badge">2</span></a>
+        </div>
+        <div class="nav-section"><span class="nav-label">Gestión</span>
+            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt="Empleados">Empleados</a>
+            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt="Sedes">Sedes</a>
+            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt="Turnos">Turnos</a>
+            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt="Informes">Informes</a>
+        </div>
+        <div class="nav-section"><span class="nav-label">Sistema</span>
+            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt="Configuración">Configuración</a>
+        </div>
+        <div class="sidebar-spacer"></div>
+        <div class="user-chip">
+            <div class="avatar">AC</div>
+            <div class="user-info"><div class="user-name">Admin Central</div><div class="user-role">Administrador</div></div>
+            <div class="btn-icon" onclick="doLogout()"><img src="icons/logout-svgrepo-com.svg" alt="Cerrar sesión"></div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="topbar"><h1>Turnos y Horarios</h1></div>
+        <div class="scroll-body page-enter">
+            <div class="turnos-layout">
+                <div class="turnos-table card">
+                    <div class="card-header"><span class="card-title">Turnos definidos</span></div>
+                    <div class="table-wrap">
+                        <table id="turnosTable">
+                            <thead><tr><th>Nombre</th><th>Entrada</th><th>Salida</th><th>Días</th><th>Empleados</th><th>Acciones</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="turnos-form card">
+                    <div class="card-header"><span class="card-title" id="form-title">Nuevo turno</span></div>
+                    <div class="card-body" style="display:flex;flex-direction:column;gap:16px">
+                        <input type="hidden" id="turnoId">
+                        <div class="field"><label>Nombre del turno</label><input type="text" id="turnoNombre" placeholder="Ej: Mañana L-V"></div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                            <div class="field"><label>Hora entrada</label><input type="time" id="turnoEntrada" value="08:00"></div>
+                            <div class="field"><label>Hora salida</label><input type="time" id="turnoSalida" value="16:00"></div>
+                        </div>
+                        <div class="field" style="gap:8px">
+                            <label>Días de la semana</label>
+                            <div class="day-toggles">
+                                <button class="day-btn day-on"  data-day="L" onclick="toggleDay(this)">L</button>
+                                <button class="day-btn day-on"  data-day="M" onclick="toggleDay(this)">M</button>
+                                <button class="day-btn day-on"  data-day="X" onclick="toggleDay(this)">X</button>
+                                <button class="day-btn day-on"  data-day="J" onclick="toggleDay(this)">J</button>
+                                <button class="day-btn day-on"  data-day="V" onclick="toggleDay(this)">V</button>
+                                <button class="day-btn day-off" data-day="S" onclick="toggleDay(this)">S</button>
+                                <button class="day-btn day-off" data-day="D" onclick="toggleDay(this)">D</button>
+                            </div>
+                        </div>
+                        <div class="field"><label>Descripción (opcional)</label><textarea id="turnoDesc" placeholder="Descripción del turno…"></textarea></div>
+                        <div style="display:flex;gap:10px">
+                            <button class="btn btn-secondary" style="flex:1" onclick="resetForm()">Cancelar</button>
+                            <button class="btn btn-primary"   style="flex:1" onclick="guardarTurno()">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="shared.js"></script>
+<script src="turnos.js"></script>
+</body>
+</html>
