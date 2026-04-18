@@ -26,10 +26,16 @@
         .radio-slider-wrap { display:flex; align-items:center; gap:10px; }
         .radio-slider-wrap input[type=range] { flex:1; accent-color:var(--primary,#3B82F6); }
         .radio-slider-wrap span { font-size:13px; font-weight:600; color:var(--navy); min-width:55px; text-align:right; }
-        .search-addr { display:flex; gap:8px; margin-bottom:8px; }
-        .search-addr input { flex:1; }
-        .search-addr button { white-space:nowrap; }
         .map-loading { display:flex; align-items:center; justify-content:center; height:100%; color:#64748B; font-size:13px; gap:8px; }
+
+        input[readonly] {
+            background: var(--bg-subtle, #F8FAFC);
+            color: var(--text-secondary, #475569);
+            cursor: default;
+            border-color: #E2E8F0;
+        }
+
+        .pac-container { z-index: 10000 !important; }
     </style>
 </head>
 <body data-page="sedes">
@@ -85,7 +91,6 @@
                     </div>
                 </div>
 
-                <!-- Panel detalle -->
                 <div class="sedes-detail-col card">
                     <div class="card-header"><span class="card-title" data-i18n="sedes.detalle">Detalle de sede</span></div>
                     <div class="card-body">
@@ -110,7 +115,6 @@
     </main>
 </div>
 
-<!-- MODAL NUEVA / EDITAR SEDE -->
 <div class="modal-overlay" id="modal-sede">
     <div class="modal" style="max-width:560px;width:100%">
         <div class="modal-header">
@@ -118,12 +122,14 @@
             <button class="modal-close" onclick="closeModal('modal-sede')">×</button>
         </div>
         <div class="modal-body">
+
             <div class="field" style="margin-bottom:8px">
                 <label data-i18n="sedes.buscar_dir">Buscar dirección</label>
-                <div class="search-addr">
-                    <input type="text" id="addrSearch" data-i18n-ph="sedes.buscar_ph" placeholder="Escribe una dirección y pulsa Buscar…">
-                    <button class="btn btn-secondary" onclick="buscarDireccion()" data-i18n="sedes.buscar_btn">Buscar</button>
-                </div>
+                <input type="text" id="addrSearch"
+                       data-i18n-ph="sedes.buscar_ph"
+                       placeholder="Escribe una calle, lugar o empresa…"
+                       autocomplete="off"
+                       style="width:100%">
             </div>
 
             <div id="modalMap"><div class="map-loading">Cargando mapa…</div></div>
@@ -133,10 +139,29 @@
             </div>
 
             <div class="form-grid form-2col">
-                <div class="field form-full"><label data-i18n="sedes.campo_nombre">Nombre</label><input type="text" id="sedeNombre" placeholder="Ej: Sede Sur"></div>
-                <div class="field form-full"><label data-i18n="sedes.campo_dir">Dirección</label><input type="text" id="sedeDireccion" placeholder="Calle, número, ciudad…"></div>
-                <div class="field"><label data-i18n="sedes.campo_lat">Latitud</label><input type="text" id="sedeLat" placeholder="40.4168" oninput="syncMapFromInputs()"></div>
-                <div class="field"><label data-i18n="sedes.campo_lon">Longitud</label><input type="text" id="sedeLon" placeholder="-3.7038" oninput="syncMapFromInputs()"></div>
+                <div class="field form-full">
+                    <label data-i18n="sedes.campo_nombre">Nombre</label>
+                    <input type="text" id="sedeNombre" placeholder="Ej: Sede Sur">
+                </div>
+
+                <div class="field form-full">
+                    <label data-i18n="sedes.campo_dir">Dirección
+                        <span style="font-weight:400;color:#94A3B8;font-size:11px" data-i18n="sedes.campo_dir_hint">(se completa al seleccionar)</span>
+                    </label>
+                    <input type="text" id="sedeDireccion" readonly
+                           data-i18n-ph="sedes.campo_dir_ph"
+                           placeholder="Selecciona una dirección en el buscador">
+                </div>
+
+                <div class="field">
+                    <label data-i18n="sedes.campo_lat">Latitud</label>
+                    <input type="text" id="sedeLat" placeholder="40.4168" oninput="syncMapFromInputs()">
+                </div>
+                <div class="field">
+                    <label data-i18n="sedes.campo_lon">Longitud</label>
+                    <input type="text" id="sedeLon" placeholder="-3.7038" oninput="syncMapFromInputs()">
+                </div>
+
                 <div class="field form-full">
                     <label><span data-i18n="sedes.campo_radio">Radio GPS</span> — <span id="radioLabel">100</span> m</label>
                     <div class="radio-slider-wrap">
@@ -144,10 +169,11 @@
                         <input type="number" id="sedeRadio" value="100" style="width:80px" oninput="onRadioInput(this.value)">
                     </div>
                 </div>
+
                 <div class="field">
                     <label data-i18n="sedes.campo_estado">Estado</label>
                     <select id="sedeEstado">
-                        <option value="activa" data-i18n="sedes.activa">Activa</option>
+                        <option value="activa"   data-i18n="sedes.activa">Activa</option>
                         <option value="inactiva" data-i18n="sedes.inactiva">Inactiva</option>
                     </select>
                 </div>
@@ -155,7 +181,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" onclick="closeModal('modal-sede')" data-i18n="sedes.cancelar">Cancelar</button>
-            <button class="btn btn-primary" onclick="guardarSede()" data-i18n="sedes.guardar">Guardar sede</button>
+            <button class="btn btn-primary"   onclick="guardarSede()"            data-i18n="sedes.guardar">Guardar sede</button>
         </div>
     </div>
 </div>
