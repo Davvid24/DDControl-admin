@@ -11,20 +11,20 @@
 <div class="app">
     <nav class="sidebar">
         <div class="brand"><div class="brand-icon">DD</div><span class="brand-name">D&D Control</span></div>
-        <div class="nav-section"><span class="nav-label">Principal</span>
-            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt="Dashboard">Dashboard</a>
-            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt="Fichajes">Fichajes</a>
-            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt="Solicitudes">Solicitudes<span class="nav-badge">4</span></a>
-            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt="Incidencias">Incidencias<span class="nav-badge">2</span></a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.principal">Principal</span>
+            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt=""><span data-i18n="nav.dashboard">Dashboard</span></a>
+            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt=""><span data-i18n="nav.fichajes">Fichajes</span></a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt=""><span data-i18n="nav.solicitudes">Solicitudes</span><span class="nav-badge">4</span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt=""><span data-i18n="nav.incidencias">Incidencias</span><span class="nav-badge">2</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Gestión</span>
-            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt="Empleados">Empleados</a>
-            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt="Sedes">Sedes</a>
-            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt="Turnos">Turnos</a>
-            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt="Informes">Informes</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.gestion">Gestión</span>
+            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt=""><span data-i18n="nav.empleados">Empleados</span></a>
+            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt=""><span data-i18n="nav.sedes">Sedes</span></a>
+            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt=""><span data-i18n="nav.turnos">Turnos</span></a>
+            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt=""><span data-i18n="nav.informes">Informes</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Sistema</span>
-            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt="Configuración">Configuración</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.sistema">Sistema</span>
+            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt=""><span data-i18n="nav.configuracion">Configuración</span></a>
         </div>
         <div class="sidebar-spacer"></div>
         <div class="user-chip">
@@ -33,41 +33,47 @@
             <div class="btn-icon" onclick="doLogout()"><img src="icons/logout-svgrepo-com.svg" alt="Cerrar sesión"></div>
         </div>
     </nav>
-
     <main>
         <div class="topbar">
-            <h1>Incidencias</h1>
+            <h1 data-i18n="incidencias.titulo">Incidencias</h1>
             <div class="topbar-spacer"></div>
-            <button class="btn btn-ghost">Ver historial</button>
+            <button class="btn btn-ghost" data-i18n="incidencias.ver_hist">Ver historial</button>
         </div>
         <div class="scroll-body page-enter">
             <div class="stat-grid">
                 <div class="stat-card">
-                    <div class="stat-icon" style="background:#FEE8EA"><img src="icons/alert-svgrepo-com.svg" alt="Pendientes hoy"></div>
+                    <div class="stat-icon" style="background:#FEE8EA"><img src="icons/alert-svgrepo-com.svg" alt=""></div>
                     <div class="stat-value" id="cnt-pendientes">2</div>
-                    <div class="stat-label">Pendientes hoy</div>
+                    <div class="stat-label" data-i18n="incidencias.pendientes_hoy">Pendientes hoy</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon" style="background:#FFF8E6"><img src="icons/gps-map-camera-svgrepo-com.svg" alt="Fuera de radio GPS"></div>
+                    <div class="stat-icon" style="background:#FFF8E6"><img src="icons/gps-map-camera-svgrepo-com.svg" alt=""></div>
                     <div class="stat-value">1</div>
-                    <div class="stat-label">Fuera de radio GPS</div>
+                    <div class="stat-label" data-i18n="incidencias.fuera_gps">Fuera de radio GPS</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon" style="background:#FFF8E6"><img src="icons/bell-slash-svgrepo-com.svg" alt="Olvidos de salida"></div>
+                    <div class="stat-icon" style="background:#FFF8E6"><img src="icons/bell-slash-svgrepo-com.svg" alt=""></div>
                     <div class="stat-value">1</div>
-                    <div class="stat-label">Olvidos de salida</div>
+                    <div class="stat-label" data-i18n="incidencias.olvidos">Olvidos de salida</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon" style="background:#E8FAF2"><img src="icons/tick-checkbox-svgrepo-com.svg" alt="Resueltas esta semana"></div>
+                    <div class="stat-icon" style="background:#E8FAF2"><img src="icons/tick-checkbox-svgrepo-com.svg" alt=""></div>
                     <div class="stat-value">18</div>
-                    <div class="stat-label">Resueltas esta semana</div>
+                    <div class="stat-label" data-i18n="incidencias.resueltas">Resueltas esta semana</div>
                 </div>
             </div>
             <div class="card">
-                <div class="card-header"><span class="card-title">Incidencias abiertas</span></div>
+                <div class="card-header"><span class="card-title" data-i18n="incidencias.abiertas">Incidencias abiertas</span></div>
                 <div class="table-wrap">
                     <table id="incidenciasTable">
-                        <thead><tr><th>Tipo</th><th>Empleado</th><th>Descripción</th><th>Fecha / Hora</th><th>Estado</th><th>Acciones</th></tr></thead>
+                        <thead><tr>
+                            <th data-i18n="incidencias.col_tipo">Tipo</th>
+                            <th data-i18n="incidencias.col_empleado">Empleado</th>
+                            <th data-i18n="incidencias.col_desc">Descripción</th>
+                            <th data-i18n="incidencias.col_fecha">Fecha / Hora</th>
+                            <th data-i18n="incidencias.col_estado">Estado</th>
+                            <th data-i18n="incidencias.col_acc">Acciones</th>
+                        </tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -75,6 +81,8 @@
         </div>
     </main>
 </div>
+
+<script src="i18n.js"></script>
 <script src="shared.js"></script>
 <script src="incidencias.js"></script>
 </body>

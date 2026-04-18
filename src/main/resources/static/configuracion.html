@@ -8,28 +8,16 @@
     <link rel="stylesheet" href="shared.css">
     <style>
         .config-scroll { display:flex; flex-direction:column; gap:20px; padding:28px; }
-
-        .toggle-row {
-            display:flex; align-items:center; justify-content:space-between;
-            padding:14px 0; border-bottom:1px solid #F0F5FB;
-        }
+        .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid #F0F5FB; }
         .toggle-row:last-child { border-bottom:none; }
         .toggle-info .toggle-label { font-size:13px; font-weight:600; color:var(--navy); }
         .toggle-info .toggle-desc  { font-size:12px; color:var(--text-label); margin-top:2px; }
         .switch { position:relative; display:inline-block; width:40px; height:22px; }
         .switch input { opacity:0; width:0; height:0; }
-        .slider {
-            position:absolute; inset:0; background:#D4E3F5; border-radius:22px;
-            cursor:pointer; transition:.2s;
-        }
-        .slider::before {
-            content:''; position:absolute; width:16px; height:16px;
-            left:3px; bottom:3px; background:white; border-radius:50%;
-            transition:.2s;
-        }
+        .slider { position:absolute; inset:0; background:#D4E3F5; border-radius:22px; cursor:pointer; transition:.2s; }
+        .slider::before { content:''; position:absolute; width:16px; height:16px; left:3px; bottom:3px; background:white; border-radius:50%; transition:.2s; }
         .switch input:checked + .slider { background:var(--blue); }
         .switch input:checked + .slider::before { transform:translateX(18px); }
-
         .strength-bar { height:4px; border-radius:2px; margin-top:6px; background:#EBF2FB; overflow:hidden; }
         .strength-fill { height:100%; border-radius:2px; transition:width .3s, background .3s; }
     </style>
@@ -38,20 +26,20 @@
 <div class="app">
     <nav class="sidebar">
         <div class="brand"><div class="brand-icon">DD</div><span class="brand-name">D&D Control</span></div>
-        <div class="nav-section"><span class="nav-label">Principal</span>
-            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt="Dashboard">Dashboard</a>
-            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt="Fichajes">Fichajes</a>
-            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt="Solicitudes">Solicitudes<span class="nav-badge">4</span></a>
-            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt="Incidencias">Incidencias<span class="nav-badge">2</span></a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.principal">Principal</span>
+            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt=""><span data-i18n="nav.dashboard">Dashboard</span></a>
+            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt=""><span data-i18n="nav.fichajes">Fichajes</span></a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt=""><span data-i18n="nav.solicitudes">Solicitudes</span><span class="nav-badge">4</span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt=""><span data-i18n="nav.incidencias">Incidencias</span><span class="nav-badge">2</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Gestión</span>
-            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt="Empleados">Empleados</a>
-            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt="Sedes">Sedes</a>
-            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt="Turnos">Turnos</a>
-            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt="Informes">Informes</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.gestion">Gestión</span>
+            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt=""><span data-i18n="nav.empleados">Empleados</span></a>
+            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt=""><span data-i18n="nav.sedes">Sedes</span></a>
+            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt=""><span data-i18n="nav.turnos">Turnos</span></a>
+            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt=""><span data-i18n="nav.informes">Informes</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Sistema</span>
-            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt="Configuración">Configuración</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.sistema">Sistema</span>
+            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt=""><span data-i18n="nav.configuracion">Configuración</span></a>
         </div>
         <div class="sidebar-spacer"></div>
         <div class="user-chip">
@@ -60,162 +48,142 @@
             <div class="btn-icon" onclick="doLogout()"><img src="icons/logout-svgrepo-com.svg" alt="Cerrar sesión"></div>
         </div>
     </nav>
-
     <main>
-        <div class="topbar"><h1>Configuración</h1></div>
-
+        <div class="topbar"><h1 data-i18n="config.titulo">Configuración</h1></div>
         <div class="tabs-bar">
-            <div class="tab active" id="tab-empresa"        onclick="switchTab('empresa')">Empresa</div>
-            <div class="tab"        id="tab-sistema"        onclick="switchTab('sistema')">Sistema</div>
-            <div class="tab"        id="tab-seguridad"      onclick="switchTab('seguridad')">Seguridad</div>
-            <div class="tab"        id="tab-notificaciones" onclick="switchTab('notificaciones')">Notificaciones</div>
+            <div class="tab active" id="tab-empresa"        onclick="switchTab('empresa')" data-i18n="config.tab_empresa">Empresa</div>
+            <div class="tab"        id="tab-sistema"        onclick="switchTab('sistema')" data-i18n="config.tab_sistema">Sistema</div>
+            <div class="tab"        id="tab-seguridad"      onclick="switchTab('seguridad')" data-i18n="config.tab_seguridad">Seguridad</div>
+            <div class="tab"        id="tab-notificaciones" onclick="switchTab('notificaciones')" data-i18n="config.tab_notif">Notificaciones</div>
         </div>
-
         <div style="flex:1;overflow-y:auto">
-
-            <!-- ── EMPRESA ── -->
             <div class="config-scroll" id="panel-empresa">
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Datos de la empresa</span></div>
+                    <div class="card-header"><span class="card-title" data-i18n="config.empresa_titulo">Datos de la empresa</span></div>
                     <div class="card-body">
                         <div class="form-grid form-2col">
-                            <div class="field"><label>Nombre empresa</label><input type="text" id="empNombre" value="Empresa S.L."></div>
-                            <div class="field"><label>NIF / CIF</label><input type="text" id="empNif" value="B12345678"></div>
-                            <div class="field form-full"><label>Dirección fiscal</label><input type="text" id="empDir" value="Calle Madrid 1, 28904 Getafe, Madrid"></div>
-                            <div class="field"><label>Email contacto</label><input type="email" id="empEmail" value="admin@admin.com"></div>
-                            <div class="field"><label>Teléfono</label><input type="tel" id="empTel" value="999999999"></div>
+                            <div class="field"><label data-i18n="config.emp_nombre">Nombre empresa</label><input type="text" id="empNombre" value="Empresa S.L."></div>
+                            <div class="field"><label data-i18n="config.emp_nif">NIF / CIF</label><input type="text" id="empNif" value="B12345678"></div>
+                            <div class="field form-full"><label data-i18n="config.emp_dir">Dirección fiscal</label><input type="text" id="empDir" value="Calle Madrid 1, 28904 Getafe, Madrid"></div>
+                            <div class="field"><label data-i18n="config.emp_email">Email contacto</label><input type="email" id="empEmail" value="admin@admin.com"></div>
+                            <div class="field"><label data-i18n="config.emp_tel">Teléfono</label><input type="tel" id="empTel" value="999999999"></div>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-secondary" onclick="resetEmpresa()">Cancelar</button>
-                        <button class="btn btn-primary"   onclick="guardarEmpresa()">Guardar cambios</button>
+                        <button class="btn btn-secondary" onclick="resetEmpresa()" data-i18n="config.cancelar">Cancelar</button>
+                        <button class="btn btn-primary"   onclick="guardarEmpresa()" data-i18n="config.guardar">Guardar cambios</button>
                     </div>
                 </div>
             </div>
-
-            <!-- ── SISTEMA ── -->
             <div class="config-scroll" id="panel-sistema" style="display:none">
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Parámetros del sistema</span></div>
+                    <div class="card-header"><span class="card-title" data-i18n="config.sis_titulo">Parámetros del sistema</span></div>
                     <div class="card-body">
                         <div class="form-grid form-2col">
-                            <div class="field"><label>Margen de retraso (minutos)</label><input type="number" id="margen" value="5" min="0" max="60"></div>
-                            <div class="field"><label>Horas mínimas jornada</label><input type="number" id="horasMin" value="8" min="1" max="12"></div>
-                            <div class="field">
-                                <label>Zona horaria</label>
-                                <select id="zona">
-                                    <option>Europe/Madrid (UTC+1)</option>
-                                    <option>Europe/London (UTC+0)</option>
-                                    <option>America/New_York (UTC-5)</option>
-                                </select>
+                            <div class="field"><label data-i18n="config.sis_margen">Margen de retraso (minutos)</label><input type="number" id="margen" value="5" min="0" max="60"></div>
+                            <div class="field"><label data-i18n="config.sis_horas">Horas mínimas jornada</label><input type="number" id="horasMin" value="8" min="1" max="12"></div>
+                            <div class="field"><label data-i18n="config.sis_zona">Zona horaria</label>
+                                <select id="zona"><option>Europe/Madrid (UTC+1)</option><option>Europe/London (UTC+0)</option><option>America/New_York (UTC-5)</option></select>
                             </div>
-                            <div class="field">
-                                <label>Formato hora en informes</label>
-                                <select id="formato">
-                                    <option>HH:mm (24h)</option>
-                                    <option>hh:mm a (12h)</option>
-                                </select>
+                            <div class="field"><label data-i18n="config.sis_formato">Formato hora en informes</label>
+                                <select id="formato"><option>HH:mm (24h)</option><option>hh:mm a (12h)</option></select>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-secondary">Cancelar</button>
-                        <button class="btn btn-primary" onclick="guardarSistema()">Guardar cambios</button>
+                        <button class="btn btn-secondary" data-i18n="config.cancelar">Cancelar</button>
+                        <button class="btn btn-primary" onclick="guardarSistema()" data-i18n="config.guardar">Guardar cambios</button>
                     </div>
                 </div>
             </div>
-
-            <!-- ── SEGURIDAD ── -->
             <div class="config-scroll" id="panel-seguridad" style="display:none">
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Cambiar contraseña</span></div>
+                    <div class="card-header"><span class="card-title" data-i18n="config.seg_titulo">Cambiar contraseña</span></div>
                     <div class="card-body">
                         <div class="form-grid" style="max-width:480px">
-                            <div class="field"><label>Contraseña actual</label><input type="password" id="passActual" placeholder="••••••••"></div>
+                            <div class="field"><label data-i18n="config.seg_actual">Contraseña actual</label><input type="password" id="passActual" placeholder="••••••••"></div>
                             <div class="field">
-                                <label>Nueva contraseña</label>
-                                <input type="password" id="passNueva" placeholder="Mín. 8 caracteres" oninput="checkStrength(this.value)">
+                                <label data-i18n="config.seg_nueva">Nueva contraseña</label>
+                                <input type="password" id="passNueva" data-i18n-ph="config.seg_nueva_ph" placeholder="Mín. 8 caracteres" oninput="checkStrength(this.value)">
                                 <div class="strength-bar"><div class="strength-fill" id="strengthFill" style="width:0%;background:#E84855"></div></div>
                                 <span id="strengthLabel" style="font-size:11px;color:var(--text-label);margin-top:4px"></span>
                             </div>
-                            <div class="field"><label>Confirmar contraseña</label><input type="password" id="passConfirm" placeholder="••••••••"></div>
+                            <div class="field"><label data-i18n="config.seg_confirm">Confirmar contraseña</label><input type="password" id="passConfirm" placeholder="••••••••"></div>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary" onclick="cambiarPassword()">Actualizar contraseña</button>
+                        <button class="btn btn-primary" onclick="cambiarPassword()" data-i18n="config.seg_actualizar">Actualizar contraseña</button>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Sesiones activas</span></div>
+                    <div class="card-header"><span class="card-title" data-i18n="config.ses_titulo">Sesiones activas</span></div>
                     <div class="card-body">
                         <div class="toggle-row">
                             <div class="toggle-info">
-                                <div class="toggle-label">Expiración de sesión automática</div>
-                                <div class="toggle-desc">Cierra la sesión tras 8 horas de inactividad</div>
+                                <div class="toggle-label" data-i18n="config.ses_exp_lbl">Expiración de sesión automática</div>
+                                <div class="toggle-desc" data-i18n="config.ses_exp_desc">Cierra la sesión tras 8 horas de inactividad</div>
                             </div>
                             <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
                         </div>
                         <div class="toggle-row">
                             <div class="toggle-info">
-                                <div class="toggle-label">Autenticación en dos pasos</div>
-                                <div class="toggle-desc">Requiere código al iniciar sesión</div>
+                                <div class="toggle-label" data-i18n="config.ses_2fa_lbl">Autenticación en dos pasos</div>
+                                <div class="toggle-desc" data-i18n="config.ses_2fa_desc">Requiere código al iniciar sesión</div>
                             </div>
                             <label class="switch"><input type="checkbox"><span class="slider"></span></label>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- ── NOTIFICACIONES ── -->
             <div class="config-scroll" id="panel-notificaciones" style="display:none">
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Preferencias de notificación</span></div>
+                    <div class="card-header"><span class="card-title" data-i18n="config.notif_titulo">Preferencias de notificación</span></div>
                     <div class="card-body">
                         <div class="toggle-row">
                             <div class="toggle-info">
-                                <div class="toggle-label">Nueva solicitud pendiente</div>
-                                <div class="toggle-desc">Recibir email cuando un empleado envíe una solicitud</div>
+                                <div class="toggle-label" data-i18n="config.notif_sol_lbl">Nueva solicitud pendiente</div>
+                                <div class="toggle-desc" data-i18n="config.notif_sol_desc">Recibir email cuando un empleado envíe una solicitud</div>
                             </div>
                             <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
                         </div>
                         <div class="toggle-row">
                             <div class="toggle-info">
-                                <div class="toggle-label">Incidencia detectada</div>
-                                <div class="toggle-desc">Alertar cuando se genere una incidencia automática</div>
+                                <div class="toggle-label" data-i18n="config.notif_inc_lbl">Incidencia detectada</div>
+                                <div class="toggle-desc" data-i18n="config.notif_inc_desc">Alertar cuando se genere una incidencia automática</div>
                             </div>
                             <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
                         </div>
                         <div class="toggle-row">
                             <div class="toggle-info">
-                                <div class="toggle-label">Fichaje fuera de radio GPS</div>
-                                <div class="toggle-desc">Notificar cuando un empleado fiche fuera de su sede</div>
+                                <div class="toggle-label" data-i18n="config.notif_gps_lbl">Fichaje fuera de radio GPS</div>
+                                <div class="toggle-desc" data-i18n="config.notif_gps_desc">Notificar cuando un empleado fiche fuera de su sede</div>
                             </div>
                             <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
                         </div>
                         <div class="toggle-row">
                             <div class="toggle-info">
-                                <div class="toggle-label">Resumen diario</div>
-                                <div class="toggle-desc">Enviar resumen de asistencia cada día a las 20:00</div>
+                                <div class="toggle-label" data-i18n="config.notif_dia_lbl">Resumen diario</div>
+                                <div class="toggle-desc" data-i18n="config.notif_dia_desc">Enviar resumen de asistencia cada día a las 20:00</div>
                             </div>
                             <label class="switch"><input type="checkbox"><span class="slider"></span></label>
                         </div>
                         <div class="toggle-row">
                             <div class="toggle-info">
-                                <div class="toggle-label">Informe semanal automático</div>
-                                <div class="toggle-desc">Enviar informe de horas cada lunes</div>
+                                <div class="toggle-label" data-i18n="config.notif_sem_lbl">Informe semanal automático</div>
+                                <div class="toggle-desc" data-i18n="config.notif_sem_desc">Enviar informe de horas cada lunes</div>
                             </div>
                             <label class="switch"><input type="checkbox"><span class="slider"></span></label>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary" onclick="guardarNotif()">Guardar preferencias</button>
+                        <button class="btn btn-primary" onclick="guardarNotif()" data-i18n="config.notif_guardar">Guardar preferencias</button>
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 </div>
+<script src="i18n.js"></script>
 <script src="shared.js"></script>
 <script src="configuracion.js"></script>
 </body>

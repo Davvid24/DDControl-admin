@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fichajes — D&D Control</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -12,20 +11,20 @@
 <div class="app">
     <nav class="sidebar">
         <div class="brand"><div class="brand-icon">DD</div><span class="brand-name">D&D Control</span></div>
-        <div class="nav-section"><span class="nav-label">Principal</span>
-            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt="Dashboard">Dashboard</a>
-            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt="Fichajes">Fichajes</a>
-            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt="Solicitudes">Solicitudes<span class="nav-badge">4</span></a>
-            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt="Incidencias">Incidencias<span class="nav-badge">2</span></a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.principal">Principal</span>
+            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt=""><span data-i18n="nav.dashboard">Dashboard</span></a>
+            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt=""><span data-i18n="nav.fichajes">Fichajes</span></a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt=""><span data-i18n="nav.solicitudes">Solicitudes</span><span class="nav-badge">4</span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt=""><span data-i18n="nav.incidencias">Incidencias</span><span class="nav-badge">2</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Gestión</span>
-            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt="Empleados">Empleados</a>
-            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt="Sedes">Sedes</a>
-            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt="Turnos">Turnos</a>
-            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt="Informes">Informes</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.gestion">Gestión</span>
+            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt=""><span data-i18n="nav.empleados">Empleados</span></a>
+            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt=""><span data-i18n="nav.sedes">Sedes</span></a>
+            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt=""><span data-i18n="nav.turnos">Turnos</span></a>
+            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt=""><span data-i18n="nav.informes">Informes</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Sistema</span>
-            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt="Configuración">Configuración</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.sistema">Sistema</span>
+            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt=""><span data-i18n="nav.configuracion">Configuración</span></a>
         </div>
         <div class="sidebar-spacer"></div>
         <div class="user-chip">
@@ -34,34 +33,37 @@
             <div class="btn-icon" onclick="doLogout()"><img src="icons/logout-svgrepo-com.svg" alt="Cerrar sesión"></div>
         </div>
     </nav>
-
     <main>
         <div class="topbar">
-            <h1>Registro de Fichajes</h1>
+            <h1 data-i18n="fichajes.titulo">Registro de Fichajes</h1>
             <div class="topbar-spacer"></div>
-            <button class="btn btn-primary" onclick="openModal('modal-fichaje')">+ Fichaje manual</button>
+            <button class="btn btn-primary" onclick="openModal('modal-fichaje')" data-i18n="fichajes.nuevo">+ Fichaje manual</button>
         </div>
-
         <div class="filter-bar">
-            <span class="filter-label">Filtrar:</span>
-            <select id="filtroEmpleado"><option value="">Todos los empleados</option></select>
-            <select id="filtroSede"><option value="">Todas las sedes</option></select>
+            <span class="filter-label" data-i18n="fichajes.filtrar">Filtrar:</span>
+            <select id="filtroEmpleado"><option value="" data-i18n="fichajes.todos_emp">Todos los empleados</option></select>
+            <select id="filtroSede"><option value="" data-i18n="fichajes.todas_sedes">Todas las sedes</option></select>
             <input type="date" id="filtroDesde">
             <input type="date" id="filtroHasta">
             <select id="filtroTipo">
-                <option value="">Todos los tipos</option>
-                <option value="entrada">Entrada</option>
-                <option value="salida">Salida</option>
+                <option value="" data-i18n="fichajes.todos_tipos">Todos los tipos</option>
+                <option value="entrada" data-i18n="fichajes.tipo_entrada">Entrada</option>
+                <option value="salida" data-i18n="fichajes.tipo_salida">Salida</option>
             </select>
             <div class="topbar-spacer"></div>
-            <button class="btn btn-ghost" onclick="exportCSV()">Exportar CSV</button>
+            <button class="btn btn-ghost" onclick="exportCSV()" data-i18n="fichajes.exportar">Exportar CSV</button>
         </div>
-
         <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;background:white">
             <div class="table-wrap" style="flex:1;overflow-y:auto">
                 <table id="fichajesTable">
                     <thead><tr>
-                        <th>Empleado</th><th>Tipo</th><th>Hora</th><th>Sede</th><th>GPS</th><th>Método</th><th>Acciones</th>
+                        <th data-i18n="fichajes.empleado">Empleado</th>
+                        <th data-i18n="fichajes.tipo">Tipo</th>
+                        <th data-i18n="fichajes.hora">Hora</th>
+                        <th data-i18n="fichajes.sede">Sede</th>
+                        <th data-i18n="dashboard.col_gps">GPS</th>
+                        <th data-i18n="fichajes.col_metodo">Método</th>
+                        <th data-i18n="fichajes.col_acciones">Acciones</th>
                     </tr></thead>
                     <tbody></tbody>
                 </table>
@@ -76,51 +78,51 @@
     </main>
 </div>
 
-<!-- MODAL FICHAJE MANUAL -->
 <div class="modal-overlay" id="modal-fichaje">
     <div class="modal">
         <div class="modal-header">
-            <span class="modal-title">Fichaje manual</span>
+            <span class="modal-title" data-i18n="fichajes.modal_titulo">Fichaje manual</span>
             <button class="modal-close" onclick="closeModal('modal-fichaje')">×</button>
         </div>
         <div class="modal-body">
             <div class="form-grid form-2col">
                 <div class="field form-full">
-                    <label>Empleado</label>
+                    <label data-i18n="fichajes.empleado">Empleado</label>
                     <select id="fichajeUsuario"><option value="">Cargando…</option></select>
                 </div>
                 <div class="field">
-                    <label>Tipo</label>
+                    <label data-i18n="fichajes.tipo">Tipo</label>
                     <select id="fichajeTipo">
-                        <option value="entrada">Entrada</option>
-                        <option value="salida">Salida</option>
+                        <option value="entrada" data-i18n="fichajes.tipo_entrada">Entrada</option>
+                        <option value="salida" data-i18n="fichajes.tipo_salida">Salida</option>
                     </select>
                 </div>
                 <div class="field">
-                    <label>Sede</label>
+                    <label data-i18n="fichajes.sede">Sede</label>
                     <select id="fichajeSede"><option value="">Cargando…</option></select>
                 </div>
                 <div class="field">
-                    <label>Fecha</label>
+                    <label data-i18n="fichajes.fecha">Fecha</label>
                     <input type="date" id="fichajeDate">
                 </div>
                 <div class="field">
-                    <label>Hora</label>
+                    <label data-i18n="fichajes.hora">Hora</label>
                     <input type="time" id="fichajeTime" value="08:00">
                 </div>
                 <div class="field form-full">
-                    <label>Observaciones</label>
-                    <textarea id="fichajeObs" placeholder="Motivo del fichaje manual…"></textarea>
+                    <label data-i18n="fichajes.obs">Observaciones</label>
+                    <textarea id="fichajeObs" data-i18n-ph="fichajes.obs_ph" placeholder="Motivo del fichaje manual…"></textarea>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('modal-fichaje')">Cancelar</button>
-            <button class="btn btn-primary" onclick="guardarFichaje()">Registrar fichaje</button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-fichaje')" data-i18n="fichajes.cancelar">Cancelar</button>
+            <button class="btn btn-primary" onclick="guardarFichaje()" data-i18n="fichajes.registrar">Registrar fichaje</button>
         </div>
     </div>
 </div>
 
+<script src="i18n.js"></script>
 <script src="shared.js"></script>
 <script src="fichajes.js"></script>
 </body>

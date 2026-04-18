@@ -11,12 +11,8 @@
         .turnos-table { flex:1; min-width:0; }
         .turnos-form  { width:300px; flex-shrink:0; }
         .day-toggles  { display:flex; gap:6px; }
-        .day-btn {
-            width:34px; height:34px; border-radius:var(--radius-sm);
-            border:none; font-family:var(--font); font-size:13px; font-weight:700;
-            cursor:pointer; transition:all var(--transition);
-        }
-        .day-on  { background:var(--blue);       color:white; }
+        .day-btn { width:34px; height:34px; border-radius:var(--radius-sm); border:none; font-family:var(--font); font-size:13px; font-weight:700; cursor:pointer; transition:all var(--transition); }
+        .day-on  { background:var(--blue); color:white; }
         .day-off { background:var(--blue-light); color:var(--text-muted); }
     </style>
 </head>
@@ -24,20 +20,20 @@
 <div class="app">
     <nav class="sidebar">
         <div class="brand"><div class="brand-icon">DD</div><span class="brand-name">D&D Control</span></div>
-        <div class="nav-section"><span class="nav-label">Principal</span>
-            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt="Dashboard">Dashboard</a>
-            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt="Fichajes">Fichajes</a>
-            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt="Solicitudes">Solicitudes<span class="nav-badge">4</span></a>
-            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt="Incidencias">Incidencias<span class="nav-badge">2</span></a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.principal">Principal</span>
+            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt=""><span data-i18n="nav.dashboard">Dashboard</span></a>
+            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt=""><span data-i18n="nav.fichajes">Fichajes</span></a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt=""><span data-i18n="nav.solicitudes">Solicitudes</span><span class="nav-badge">4</span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt=""><span data-i18n="nav.incidencias">Incidencias</span><span class="nav-badge">2</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Gestión</span>
-            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt="Empleados">Empleados</a>
-            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt="Sedes">Sedes</a>
-            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt="Turnos">Turnos</a>
-            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt="Informes">Informes</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.gestion">Gestión</span>
+            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt=""><span data-i18n="nav.empleados">Empleados</span></a>
+            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt=""><span data-i18n="nav.sedes">Sedes</span></a>
+            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt=""><span data-i18n="nav.turnos">Turnos</span></a>
+            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt=""><span data-i18n="nav.informes">Informes</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Sistema</span>
-            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt="Configuración">Configuración</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.sistema">Sistema</span>
+            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt=""><span data-i18n="nav.configuracion">Configuración</span></a>
         </div>
         <div class="sidebar-spacer"></div>
         <div class="user-chip">
@@ -46,32 +42,37 @@
             <div class="btn-icon" onclick="doLogout()"><img src="icons/logout-svgrepo-com.svg" alt="Cerrar sesión"></div>
         </div>
     </nav>
-
     <main>
-        <div class="topbar"><h1>Turnos y Horarios</h1></div>
+        <div class="topbar"><h1 data-i18n="turnos.titulo">Turnos y Horarios</h1></div>
         <div class="scroll-body page-enter">
             <div class="turnos-layout">
                 <div class="turnos-table card">
-                    <div class="card-header"><span class="card-title">Turnos definidos</span></div>
+                    <div class="card-header"><span class="card-title" data-i18n="turnos.definidos">Turnos definidos</span></div>
                     <div class="table-wrap">
                         <table id="turnosTable">
-                            <thead><tr><th>Nombre</th><th>Entrada</th><th>Salida</th><th>Días</th><th>Empleados</th><th>Acciones</th></tr></thead>
+                            <thead><tr>
+                                <th data-i18n="turnos.col_nombre">Nombre</th>
+                                <th data-i18n="turnos.col_entrada">Entrada</th>
+                                <th data-i18n="turnos.col_salida">Salida</th>
+                                <th data-i18n="turnos.col_dias">Días</th>
+                                <th data-i18n="turnos.col_emp">Empleados</th>
+                                <th data-i18n="turnos.col_acc">Acciones</th>
+                            </tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
                 </div>
-
                 <div class="turnos-form card">
-                    <div class="card-header"><span class="card-title" id="form-title">Nuevo turno</span></div>
+                    <div class="card-header"><span class="card-title" id="form-title" data-i18n="turnos.nuevo">Nuevo turno</span></div>
                     <div class="card-body" style="display:flex;flex-direction:column;gap:16px">
                         <input type="hidden" id="turnoId">
-                        <div class="field"><label>Nombre del turno</label><input type="text" id="turnoNombre" placeholder="Ej: Mañana L-V"></div>
+                        <div class="field"><label data-i18n="turnos.campo_nombre">Nombre del turno</label><input type="text" id="turnoNombre" placeholder="Ej: Mañana L-V"></div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-                            <div class="field"><label>Hora entrada</label><input type="time" id="turnoEntrada" value="08:00"></div>
-                            <div class="field"><label>Hora salida</label><input type="time" id="turnoSalida" value="16:00"></div>
+                            <div class="field"><label data-i18n="turnos.campo_ent">Hora entrada</label><input type="time" id="turnoEntrada" value="08:00"></div>
+                            <div class="field"><label data-i18n="turnos.campo_sal">Hora salida</label><input type="time" id="turnoSalida" value="16:00"></div>
                         </div>
                         <div class="field" style="gap:8px">
-                            <label>Días de la semana</label>
+                            <label data-i18n="turnos.dias_sem">Días de la semana</label>
                             <div class="day-toggles">
                                 <button class="day-btn day-on"  data-day="L" onclick="toggleDay(this)">L</button>
                                 <button class="day-btn day-on"  data-day="M" onclick="toggleDay(this)">M</button>
@@ -82,10 +83,10 @@
                                 <button class="day-btn day-off" data-day="D" onclick="toggleDay(this)">D</button>
                             </div>
                         </div>
-                        <div class="field"><label>Descripción (opcional)</label><textarea id="turnoDesc" placeholder="Descripción del turno…"></textarea></div>
+                        <div class="field"><label data-i18n="turnos.desc">Descripción (opcional)</label><textarea id="turnoDesc" placeholder="Descripción del turno…"></textarea></div>
                         <div style="display:flex;gap:10px">
-                            <button class="btn btn-secondary" style="flex:1" onclick="resetForm()">Cancelar</button>
-                            <button class="btn btn-primary"   style="flex:1" onclick="guardarTurno()">Guardar</button>
+                            <button class="btn btn-secondary" style="flex:1" onclick="resetForm()" data-i18n="turnos.cancelar">Cancelar</button>
+                            <button class="btn btn-primary"   style="flex:1" onclick="guardarTurno()" data-i18n="turnos.guardar">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -93,6 +94,7 @@
         </div>
     </main>
 </div>
+<script src="i18n.js"></script>
 <script src="shared.js"></script>
 <script src="turnos.js"></script>
 </body>
