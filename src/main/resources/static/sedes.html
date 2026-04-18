@@ -20,31 +20,15 @@
         .detail-val { font-size:14px; font-weight:500; color:var(--navy); margin-top:3px; }
         tbody tr.sel { background:#F0F7FF !important; }
 
-        #modalMap {
-            height:260px;
-            border-radius:10px;
-            overflow:hidden;
-            border:1px solid #CBD5E1;
-            background:#e8eef5;
-            margin-bottom:4px;
-        }
-        .map-hint {
-            font-size:11px;
-            color:#64748B;
-            margin-bottom:12px;
-            display:flex;
-            align-items:center;
-            gap:5px;
-        }
+        #modalMap { height:260px; border-radius:10px; overflow:hidden; border:1px solid #CBD5E1; background:#e8eef5; margin-bottom:4px; }
+        .map-hint { font-size:11px; color:#64748B; margin-bottom:12px; display:flex; align-items:center; gap:5px; }
         .map-hint svg { flex-shrink:0; }
-        .coords-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
         .radio-slider-wrap { display:flex; align-items:center; gap:10px; }
         .radio-slider-wrap input[type=range] { flex:1; accent-color:var(--primary,#3B82F6); }
         .radio-slider-wrap span { font-size:13px; font-weight:600; color:var(--navy); min-width:55px; text-align:right; }
         .search-addr { display:flex; gap:8px; margin-bottom:8px; }
         .search-addr input { flex:1; }
         .search-addr button { white-space:nowrap; }
-
         .map-loading { display:flex; align-items:center; justify-content:center; height:100%; color:#64748B; font-size:13px; gap:8px; }
     </style>
 </head>
@@ -52,20 +36,20 @@
 <div class="app">
     <nav class="sidebar">
         <div class="brand"><div class="brand-icon">DD</div><span class="brand-name">D&D Control</span></div>
-        <div class="nav-section"><span class="nav-label">Principal</span>
-            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt="Dashboard">Dashboard</a>
-            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt="Fichajes">Fichajes</a>
-            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt="Solicitudes">Solicitudes<span class="nav-badge">4</span></a>
-            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt="Incidencias">Incidencias<span class="nav-badge">2</span></a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.principal">Principal</span>
+            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt=""><span data-i18n="nav.dashboard">Dashboard</span></a>
+            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt=""><span data-i18n="nav.fichajes">Fichajes</span></a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt=""><span data-i18n="nav.solicitudes">Solicitudes</span><span class="nav-badge">4</span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt=""><span data-i18n="nav.incidencias">Incidencias</span><span class="nav-badge">2</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Gestión</span>
-            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt="Empleados">Empleados</a>
-            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt="Sedes">Sedes</a>
-            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt="Turnos">Turnos</a>
-            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt="Informes">Informes</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.gestion">Gestión</span>
+            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt=""><span data-i18n="nav.empleados">Empleados</span></a>
+            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt=""><span data-i18n="nav.sedes">Sedes</span></a>
+            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt=""><span data-i18n="nav.turnos">Turnos</span></a>
+            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt=""><span data-i18n="nav.informes">Informes</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Sistema</span>
-            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt="Configuración">Configuración</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.sistema">Sistema</span>
+            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt=""><span data-i18n="nav.configuracion">Configuración</span></a>
         </div>
         <div class="sidebar-spacer"></div>
         <div class="user-chip">
@@ -77,38 +61,47 @@
 
     <main>
         <div class="topbar">
-            <h1>Sedes</h1>
+            <h1 data-i18n="sedes.titulo">Sedes</h1>
             <div class="topbar-spacer"></div>
-            <button class="btn btn-primary" onclick="abrirModalNueva()">+ Nueva sede</button>
+            <button class="btn btn-primary" onclick="abrirModalNueva()" data-i18n="sedes.nueva">+ Nueva sede</button>
         </div>
         <div class="scroll-body page-enter">
             <div class="sedes-layout">
+                <!-- Tabla -->
                 <div class="sedes-table-col card">
-                    <div class="card-header"><span class="card-title">Sedes registradas</span></div>
+                    <div class="card-header"><span class="card-title" data-i18n="sedes.registradas">Sedes registradas</span></div>
                     <div class="table-wrap">
                         <table id="sedesTable">
-                            <thead><tr><th>Nombre</th><th>Dirección</th><th>Empleados</th><th>Radio GPS</th><th>Estado</th><th>Acciones</th></tr></thead>
+                            <thead><tr>
+                                <th data-i18n="sedes.col_nombre">Nombre</th>
+                                <th data-i18n="sedes.col_direccion">Dirección</th>
+                                <th data-i18n="sedes.col_empleados">Empleados</th>
+                                <th data-i18n="sedes.col_radio">Radio GPS</th>
+                                <th data-i18n="sedes.col_estado">Estado</th>
+                                <th data-i18n="sedes.col_acciones">Acciones</th>
+                            </tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
                 </div>
 
+                <!-- Panel detalle -->
                 <div class="sedes-detail-col card">
-                    <div class="card-header"><span class="card-title">Detalle de sede</span></div>
+                    <div class="card-header"><span class="card-title" data-i18n="sedes.detalle">Detalle de sede</span></div>
                     <div class="card-body">
                         <div id="detailMapWrap">
                             <div class="map-ph-empty" id="mapPlaceholder">
                                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                                <span>Selecciona una sede</span>
+                                <span data-i18n="sedes.selecciona">Selecciona una sede</span>
                             </div>
                             <div id="detailMap" style="display:none"></div>
                         </div>
                         <div style="margin-top:16px">
-                            <div class="detail-row"><div class="detail-lbl">Nombre</div><div class="detail-val" id="det-nombre">—</div></div>
-                            <div class="detail-row"><div class="detail-lbl">Dirección</div><div class="detail-val" id="det-dir">—</div></div>
-                            <div class="detail-row"><div class="detail-lbl">Coordenadas</div><div class="detail-val" id="det-coords">—</div></div>
-                            <div class="detail-row"><div class="detail-lbl">Radio permitido</div><div class="detail-val" id="det-radio">—</div></div>
-                            <div class="detail-row"><div class="detail-lbl">Empleados asignados</div><div class="detail-val" id="det-emp">—</div></div>
+                            <div class="detail-row"><div class="detail-lbl" data-i18n="sedes.det_nombre">Nombre</div><div class="detail-val" id="det-nombre">—</div></div>
+                            <div class="detail-row"><div class="detail-lbl" data-i18n="sedes.det_direccion">Dirección</div><div class="detail-val" id="det-dir">—</div></div>
+                            <div class="detail-row"><div class="detail-lbl" data-i18n="sedes.det_coords">Coordenadas</div><div class="detail-val" id="det-coords">—</div></div>
+                            <div class="detail-row"><div class="detail-lbl" data-i18n="sedes.det_radio">Radio permitido</div><div class="detail-val" id="det-radio">—</div></div>
+                            <div class="detail-row"><div class="detail-lbl" data-i18n="sedes.det_emp">Empleados asignados</div><div class="detail-val" id="det-emp">—</div></div>
                         </div>
                     </div>
                 </div>
@@ -117,51 +110,57 @@
     </main>
 </div>
 
-
+<!-- MODAL NUEVA / EDITAR SEDE -->
 <div class="modal-overlay" id="modal-sede">
     <div class="modal" style="max-width:560px;width:100%">
         <div class="modal-header">
-            <span class="modal-title" id="modal-sede-title">Nueva sede</span>
+            <span class="modal-title" id="modal-sede-title" data-i18n="sedes.modal_nueva">Nueva sede</span>
             <button class="modal-close" onclick="closeModal('modal-sede')">×</button>
         </div>
         <div class="modal-body">
-
             <div class="field" style="margin-bottom:8px">
-                <label>Buscar dirección</label>
+                <label data-i18n="sedes.buscar_dir">Buscar dirección</label>
                 <div class="search-addr">
-                    <input type="text" id="addrSearch" placeholder="Escribe una dirección y pulsa Buscar…">
-                    <button class="btn btn-secondary" onclick="buscarDireccion()">Buscar</button>
+                    <input type="text" id="addrSearch" data-i18n-ph="sedes.buscar_ph" placeholder="Escribe una dirección y pulsa Buscar…">
+                    <button class="btn btn-secondary" onclick="buscarDireccion()" data-i18n="sedes.buscar_btn">Buscar</button>
                 </div>
             </div>
 
             <div id="modalMap"><div class="map-loading">Cargando mapa…</div></div>
             <div class="map-hint">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Haz clic en el mapa para mover el marcador. Arrastra el círculo azul para ajustar el radio.
+                <span data-i18n="sedes.map_hint">Haz clic en el mapa para mover el marcador. Arrastra el círculo azul para ajustar el radio.</span>
             </div>
 
             <div class="form-grid form-2col">
-                <div class="field form-full"><label>Nombre</label><input type="text" id="sedeNombre" placeholder="Ej: Sede Sur"></div>
-                <div class="field form-full"><label>Dirección</label><input type="text" id="sedeDireccion" placeholder="Calle, número, ciudad…"></div>
-                <div class="field"><label>Latitud</label><input type="text" id="sedeLat" placeholder="40.4168" oninput="syncMapFromInputs()"></div>
-                <div class="field"><label>Longitud</label><input type="text" id="sedeLon" placeholder="-3.7038" oninput="syncMapFromInputs()"></div>
+                <div class="field form-full"><label data-i18n="sedes.campo_nombre">Nombre</label><input type="text" id="sedeNombre" placeholder="Ej: Sede Sur"></div>
+                <div class="field form-full"><label data-i18n="sedes.campo_dir">Dirección</label><input type="text" id="sedeDireccion" placeholder="Calle, número, ciudad…"></div>
+                <div class="field"><label data-i18n="sedes.campo_lat">Latitud</label><input type="text" id="sedeLat" placeholder="40.4168" oninput="syncMapFromInputs()"></div>
+                <div class="field"><label data-i18n="sedes.campo_lon">Longitud</label><input type="text" id="sedeLon" placeholder="-3.7038" oninput="syncMapFromInputs()"></div>
                 <div class="field form-full">
-                    <label>Radio GPS — <span id="radioLabel">100</span> m</label>
+                    <label><span data-i18n="sedes.campo_radio">Radio GPS</span> — <span id="radioLabel">100</span> m</label>
                     <div class="radio-slider-wrap">
                         <input type="range" id="sedeRadioSlider" min="50" max="2000" step="10" value="100" oninput="onRadioSlider(this.value)">
                         <input type="number" id="sedeRadio" value="100" style="width:80px" oninput="onRadioInput(this.value)">
                     </div>
                 </div>
-                <div class="field"><label>Estado</label><select id="sedeEstado"><option value="activa">Activa</option><option value="inactiva">Inactiva</option></select></div>
+                <div class="field">
+                    <label data-i18n="sedes.campo_estado">Estado</label>
+                    <select id="sedeEstado">
+                        <option value="activa" data-i18n="sedes.activa">Activa</option>
+                        <option value="inactiva" data-i18n="sedes.inactiva">Inactiva</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('modal-sede')">Cancelar</button>
-            <button class="btn btn-primary" onclick="guardarSede()">Guardar sede</button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-sede')" data-i18n="sedes.cancelar">Cancelar</button>
+            <button class="btn btn-primary" onclick="guardarSede()" data-i18n="sedes.guardar">Guardar sede</button>
         </div>
     </div>
 </div>
 
+<script src="i18n.js"></script>
 <script src="shared.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClby51erWdP8wgIkCz7_MRmFsATCda-04&libraries=places&callback=initGoogleMaps" async defer></script>
 <script src="sedes.js"></script>
