@@ -19,11 +19,11 @@ const API = '/api';
     });
 
     const nombre = sessionStorage.getItem('nombre');
-    const rol    = sessionStorage.getItem('rol');
+    const rol = sessionStorage.getItem('rol');
     const nameEl = document.querySelector('.user-name');
     const roleEl = document.querySelector('.user-role');
     if (nameEl && nombre) nameEl.textContent = nombre;
-    if (roleEl && rol)    roleEl.textContent  = rol;
+    if (roleEl && rol) roleEl.textContent = rol;
 
     const spacer = document.querySelector('.sidebar-spacer');
     if (spacer) {
@@ -43,15 +43,28 @@ const API = '/api';
 document.addEventListener('DOMContentLoaded', applyTranslations);
 
 
-function goTo(path) { window.location.href = path; }
+function goTo(path) {
+    window.location.href = path;
+}
 
 function doLogout() {
     sessionStorage.clear();
     window.location.href = 'login.html';
 }
 
-function openModal(id)  { document.getElementById(id)?.classList.add('open'); }
-function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
+
+function openModal(id) {
+    document.getElementById(id)?.classList.add('open');
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    modal?.classList.remove('open');
+    const form = modal?.querySelector('form');
+    if (form) form.reset();
+
+    modal?.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
+}
 
 document.addEventListener('click', e => {
     if (e.target.classList.contains('modal-overlay'))
@@ -71,7 +84,8 @@ function activateTab(clickedTab, groupSelector) {
 }
 
 function showToast(msg, type = 'success') {
-    const colors = { success: '#0F9A5A', error: '#E84855', info: '#1A6FD4' };
+    if (type === 'error') return;
+    const colors = {success: '#0F9A5A', error: '#E84855', info: '#1A6FD4'};
     const el = document.createElement('div');
     el.style.cssText = `
     position:fixed; bottom:24px; right:24px; z-index:9999;
@@ -82,7 +96,9 @@ function showToast(msg, type = 'success') {
   `;
     el.textContent = msg;
     document.body.appendChild(el);
-    setTimeout(() => { el.style.opacity = '0'; }, 2500);
+    setTimeout(() => {
+        el.style.opacity = '0';
+    }, 2500);
     setTimeout(() => el.remove(), 2900);
 }
 
@@ -93,9 +109,10 @@ function confirmDelete(message, onConfirm) {
 
 function toggleDay(btn) {
     const on = btn.classList.contains('day-on');
-    btn.classList.toggle('day-on',  !on);
-    btn.classList.toggle('day-off',  on);
+    btn.classList.toggle('day-on', !on);
+    btn.classList.toggle('day-off', on);
 }
+
 function getSelectedDays() {
     return [...document.querySelectorAll('.day-btn.day-on')]
         .map(b => b.dataset.day).join(',');
@@ -108,12 +125,14 @@ function formatDate(iso) {
         day: '2-digit', month: '2-digit', year: 'numeric'
     });
 }
+
 function formatTime(iso) {
     if (!iso) return '—';
     return new Date(iso).toLocaleTimeString('es-ES', {
         hour: '2-digit', minute: '2-digit'
     });
 }
+
 function formatDateTime(iso) {
     if (!iso) return '—';
     return `${formatDate(iso)} ${formatTime(iso)}`;
@@ -128,6 +147,7 @@ const AVATAR_COLORS = [
     '#3D5AFE', '#E84855', '#0F9A5A', '#F59E0B',
     '#8B5CF6', '#06B6D4', '#EC4899', '#64748B'
 ];
+
 function avatarColor(name) {
     if (!name) return AVATAR_COLORS[0];
     let h = 0;
@@ -142,7 +162,7 @@ async function apiFetch(url, options = {}) {
     const res = await fetch(url, {
         headers: {
             'Content-Type': 'application/json',
-            ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+            ...(token ? {'Authorization': `Bearer ${token}`} : {}),
             ...options.headers,
         },
         ...options,
@@ -156,7 +176,10 @@ async function apiFetch(url, options = {}) {
 
     if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.mensaje || `Error ${res.status}`);
+        const error = new Error(err.mensaje || `Error ${res.status}`);
+        error.errores = err.errores || null;
+        error.data = err;
+        throw error;
     }
 
     if (res.status === 204) return null;

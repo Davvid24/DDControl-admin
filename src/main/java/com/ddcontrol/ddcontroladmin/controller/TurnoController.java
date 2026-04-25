@@ -43,4 +43,11 @@ public class TurnoController {
         turnoService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    @PatchMapping("/{id}/asignar-empleados")
+    public ResponseEntity<Void> asignarEmpleados(
+            @PathVariable Integer id,
+            @RequestBody List<Integer> idUsuarios) {
+        turnoService.asignarEmpleados(id, idUsuarios);
+        return ResponseEntity.noContent().build();
+    }
 }

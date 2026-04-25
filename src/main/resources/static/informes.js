@@ -82,8 +82,6 @@ function renderInforme(fichajes) {
        </td></tr>`;
 }
 
-function exportPDF()   { showToast('Exportando PDF… (próximamente)', 'info'); }
-function exportExcel() { showToast('Exportando Excel… (próximamente)', 'info'); }
 
 async function cargarSelectores() {
   try {

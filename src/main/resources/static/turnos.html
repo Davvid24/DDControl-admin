@@ -97,5 +97,20 @@
 <script src="i18n.js"></script>
 <script src="shared.js"></script>
 <script src="turnos.js"></script>
+<div class="modal-overlay" id="modal-asignar">
+    <div class="modal" style="max-width:480px">
+        <div class="modal-header">
+            <span class="modal-title">Asignar empleados — <span id="asignar-turno-nombre"></span></span>
+            <button class="modal-close" onclick="closeModal('modal-asignar')">×</button>
+        </div>
+        <div class="modal-body" style="max-height:400px;overflow-y:auto">
+            <div id="asignar-lista" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('modal-asignar')">Cancelar</button>
+            <button class="btn btn-primary" onclick="confirmarAsignacion()">Guardar asignación</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

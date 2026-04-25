@@ -2,8 +2,10 @@ package com.ddcontrol.ddcontroladmin.service;
 
 import com.ddcontrol.ddcontroladmin.dto.UsuarioDTO;
 import com.ddcontrol.ddcontroladmin.model.Empresa;
+import com.ddcontrol.ddcontroladmin.model.Turno;
 import com.ddcontrol.ddcontroladmin.model.Usuario;
 import com.ddcontrol.ddcontroladmin.repository.EmpresaRepository;
+import com.ddcontrol.ddcontroladmin.repository.TurnoRepository;
 import com.ddcontrol.ddcontroladmin.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final EmpresaRepository empresaRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TurnoRepository turnoRepository;
+
 
     @Transactional(readOnly = true)
     public List<UsuarioDTO.Response> findAll() {
@@ -57,6 +61,11 @@ public class UsuarioService {
         u.setFechaAlta(Instant.now());
         u.setActivo(true);
         u.setFotoPerfil(req.getFotoPerfil());
+        if (req.getIdTurno() != null) {
+            Turno turno = turnoRepository.findById(req.getIdTurno())
+                    .orElseThrow(() -> new EntityNotFoundException("Turno no encontrado: " + req.getIdTurno()));
+            u.setTurno(turno);
+        }
         return toResponse(usuarioRepository.save(u));
     }
 
@@ -76,6 +85,13 @@ public class UsuarioService {
         if (req.getPassword() != null && !req.getPassword().isBlank())
             u.setPasswordHash(passwordEncoder.encode(req.getPassword()));
 
+        if (req.getIdTurno() != null) {
+            Turno turno = turnoRepository.findById(req.getIdTurno())
+                    .orElseThrow(() -> new EntityNotFoundException("Turno no encontrado: " + req.getIdTurno()));
+            u.setTurno(turno);
+        } else {
+            u.setTurno(null);
+        }
         return toResponse(usuarioRepository.save(u));
     }
 
@@ -110,6 +126,8 @@ public class UsuarioService {
         r.setFechaAlta(u.getFechaAlta());
         r.setActivo(u.getActivo());
         r.setFotoPerfil(u.getFotoPerfil());
+        r.setIdTurno(u.getTurno() != null ? u.getTurno().getId() : null);
+        r.setNombreTurno(u.getTurno() != null ? u.getTurno().getNombre() : null);
         return r;
     }
 }
