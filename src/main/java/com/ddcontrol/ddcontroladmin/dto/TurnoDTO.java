@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.List;
 
 public class TurnoDTO {
 
@@ -35,5 +36,14 @@ public class TurnoDTO {
         private LocalTime horaEntrada;
         private LocalTime horaSalida;
         private String descripcion;
+        private List<EmpleadoResumen> empleados;
+    }
+
+    @Data
+    public static class EmpleadoResumen {
+        private Integer id;
+        private String nombre;
+        private String apellidos;
+        private String email;
     }
 }

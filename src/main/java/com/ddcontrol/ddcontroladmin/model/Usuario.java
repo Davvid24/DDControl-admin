@@ -75,4 +75,9 @@ public class Usuario {
     @Column(name = "foto_perfil")
     private String fotoPerfil;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "id_turno")
+    private Turno turno;
+
 }

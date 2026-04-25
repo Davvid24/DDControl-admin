@@ -24,7 +24,7 @@ public class UsuarioDTO {
         @NotBlank @Email @Size(max = 150)
         private String email;
 
-        @NotBlank @Size(min = 8, max = 255)
+        @Size(min = 8, max = 255)
         private String password;
 
         @NotBlank @Size(max = 20)
@@ -38,6 +38,9 @@ public class UsuarioDTO {
 
         @Size(max = 255)
         private String fotoPerfil;
+
+        private Integer idTurno;
+
     }
 
     @Data
@@ -54,5 +57,7 @@ public class UsuarioDTO {
         private Instant fechaAlta;
         private Boolean activo;
         private String fotoPerfil;
+        private Integer idTurno;
+        private String nombreTurno;
     }
 }

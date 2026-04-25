@@ -3,8 +3,10 @@ package com.ddcontrol.ddcontroladmin.service;
 import com.ddcontrol.ddcontroladmin.dto.TurnoDTO;
 import com.ddcontrol.ddcontroladmin.model.Empresa;
 import com.ddcontrol.ddcontroladmin.model.Turno;
+import com.ddcontrol.ddcontroladmin.model.Usuario;
 import com.ddcontrol.ddcontroladmin.repository.EmpresaRepository;
 import com.ddcontrol.ddcontroladmin.repository.TurnoRepository;
+import com.ddcontrol.ddcontroladmin.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class TurnoService {
 
     private final TurnoRepository turnoRepository;
     private final EmpresaRepository empresaRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Transactional(readOnly = true)
     public List<TurnoDTO.Response> findAll() {
@@ -81,6 +84,33 @@ public class TurnoService {
         r.setHoraEntrada(t.getHoraEntrada());
         r.setHoraSalida(t.getHoraSalida());
         r.setDescripcion(t.getDescripcion());
+        List<TurnoDTO.EmpleadoResumen> empleados = usuarioRepository.findByTurno_Id(t.getId())
+                .stream().map(u -> {
+                    TurnoDTO.EmpleadoResumen er = new TurnoDTO.EmpleadoResumen();
+                    er.setId(u.getId());
+                    er.setNombre(u.getNombre());
+                    er.setApellidos(u.getApellidos());
+                    er.setEmail(u.getEmail());
+                    return er;
+                }).toList();
+        r.setEmpleados(empleados);
         return r;
+    }
+    public void asignarEmpleados(Integer idTurno, List<Integer> idUsuarios) {
+        Turno turno = getOrThrow(idTurno);
+        usuarioRepository.findByTurno_Id(idTurno).forEach(u -> {
+            if (!idUsuarios.contains(u.getId())) {
+                u.setTurno(null);
+                usuarioRepository.save(u);
+            }
+        });
+
+        // Asignar los nuevos
+        idUsuarios.forEach(idU -> {
+            Usuario u = usuarioRepository.findById(idU)
+                    .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado: " + idU));
+            u.setTurno(turno);
+            usuarioRepository.save(u);
+        });
     }
 }
