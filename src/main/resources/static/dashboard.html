@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — D&D Control</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared.css">
-<link rel="stylesheet" href="dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — D&D Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body data-page="dashboard">
-
 <div class="app">
     <nav class="sidebar">
         <div class="brand"><div class="brand-icon">DD</div><span class="brand-name">D&D Control</span></div>
-        <div class="nav-section"><span class="nav-label">Principal</span>
-            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt="Dashboard">Dashboard</a>
-            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt="Fichajes">Fichajes</a>
-            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt="Solicitudes">Solicitudes<span class="nav-badge">4</span></a>
-            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt="Incidencias">Incidencias<span class="nav-badge">2</span></a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.principal">Principal</span>
+            <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt=""><span data-i18n="nav.dashboard">Dashboard</span></a>
+            <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt=""><span data-i18n="nav.fichajes">Fichajes</span></a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt=""><span data-i18n="nav.solicitudes">Solicitudes</span><span class="nav-badge">4</span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt=""><span data-i18n="nav.incidencias">Incidencias</span><span class="nav-badge">2</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Gestión</span>
-            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt="Empleados">Empleados</a>
-            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt="Sedes">Sedes</a>
-            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt="Turnos">Turnos</a>
-            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt="Informes">Informes</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.gestion">Gestión</span>
+            <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt=""><span data-i18n="nav.empleados">Empleados</span></a>
+            <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt=""><span data-i18n="nav.sedes">Sedes</span></a>
+            <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt=""><span data-i18n="nav.turnos">Turnos</span></a>
+            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt=""><span data-i18n="nav.informes">Informes</span></a>
         </div>
-        <div class="nav-section"><span class="nav-label">Sistema</span>
-            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt="Configuración">Configuración</a>
+        <div class="nav-section"><span class="nav-label" data-i18n="nav.sistema">Sistema</span>
+            <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt=""><span data-i18n="nav.configuracion">Configuración</span></a>
         </div>
         <div class="sidebar-spacer"></div>
         <div class="user-chip">
@@ -37,126 +36,95 @@
         </div>
     </nav>
 
-  <main>
-    <div class="topbar">
-      <h1>Dashboard</h1>
-      <div class="topbar-spacer"></div>
-      <div class="search-box">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8BA4C0" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input placeholder="Buscar empleado, fichaje…" id="searchInput">
-      </div>
-    </div>
-
-    <div class="scroll-body page-enter">
-
-      <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-card-row">
-            <div class="stat-icon" style="background:#E3F0FF"><img src="icons/employees-svgrepo-com (1).svg" alt=""></div>
-            <span class="stat-badge badge-green">+2 hoy</span>
-          </div>
-          <div class="stat-value">48</div>
-          <div class="stat-label">Empleados activos</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card-row">
-            <div class="stat-icon" style="background:#E8FAF2"><img src="icons/tick-checkbox-svgrepo-com.svg" alt=""></div>
-            <span class="stat-badge badge-green">94%</span>
-          </div>
-          <div class="stat-value">43</div>
-          <div class="stat-label">Presentes hoy</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card-row">
-            <div class="stat-icon" style="background:#FFF8E6"><img src="icons/clock-square-svgrepo-com.svg" alt=""></div>
-            <span class="stat-badge badge-red">4 pend.</span>
-          </div>
-          <div class="stat-value">4</div>
-          <div class="stat-label">Solicitudes pendientes</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card-row">
-            <div class="stat-icon" style="background:#FEE8EA"><img src="icons/warning-svgrepo-com.svg" alt=""></div>
-            <span class="stat-badge badge-red">2 hoy</span>
-          </div>
-          <div class="stat-value">2</div>
-          <div class="stat-label">Incidencias abiertas</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Últimos fichajes</span>
-          <a href="fichajes.html" class="btn btn-ghost btn-sm">Ver todos →</a>
-        </div>
-        <div class="table-wrap">
-          <table id="fichajesTable">
-            <thead><tr>
-              <th>Empleado</th>
-              <th>Tipo</th>
-              <th>Hora</th>
-              <th>Sede</th>
-              <th>GPS</th>
-            </tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="dash-two-col">
-        <div class="card">
-          <div class="card-header"><span class="card-title">Presencia por sede</span></div>
-          <div class="card-body">
-            <div class="sede-row">
-              <span class="sede-name">Sede Central</span>
-              <div class="sede-bar-wrap">
-                <div class="sede-bar" style="width:87%"></div>
-              </div>
-              <span class="sede-pct">87%</span>
+    <main>
+        <div class="topbar">
+            <h1 data-i18n="dashboard.titulo">Dashboard</h1>
+            <div class="topbar-spacer"></div>
+            <div class="search-box">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8BA4C0" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input data-i18n-ph="dashboard.buscar" placeholder="Buscar empleado, fichaje…" id="searchInput">
             </div>
-            <div class="sede-row">
-              <span class="sede-name">Sede Norte</span>
-              <div class="sede-bar-wrap">
-                <div class="sede-bar" style="width:100%"></div>
-              </div>
-              <span class="sede-pct">100%</span>
-            </div>
-            <div class="sede-row">
-              <span class="sede-name">Sede Sur</span>
-              <div class="sede-bar-wrap">
-                <div class="sede-bar" style="width:75%"></div>
-              </div>
-              <span class="sede-pct">75%</span>
-            </div>
-          </div>
         </div>
-        <div class="card">
-          <div class="card-header"><span class="card-title">Acciones rápidas</span></div>
-          <div class="card-body quick-actions">
-            <a href="fichajes.html" class="quick-btn">
-              <span class="quick-icon"><img src="icons/timer-3-second-svgrepo-com.svg" alt=""></span>
-              <span>Nuevo fichaje manual</span>
-            </a>
-            <a href="solicitudes.html" class="quick-btn">
-              <span class="quick-icon"><img src="icons/clock-square-svgrepo-com.svg" alt=""></span>
-              <span>Ver solicitudes pendientes</span>
-            </a>
-            <a href="incidencias.html" class="quick-btn">
-              <span class="quick-icon"><img src="icons/warning-svgrepo-com.svg" alt=""></span>
-              <span>Gestionar incidencias</span>
-            </a>
-            <a href="informes.html" class="quick-btn">
-              <span class="quick-icon"><img src="icons/report-svgrepo-com.svg" alt=""></span>
-              <span>Generar informe</span>
-            </a>
-          </div>
-        </div>
-      </div>
 
-    </div>
-  </main>
+        <div class="scroll-body page-enter">
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-card-row">
+                        <div class="stat-icon" style="background:#E3F0FF"><img src="icons/employees-svgrepo-com (1).svg" alt=""></div>
+                        <span class="stat-badge badge-green">+2 hoy</span>
+                    </div>
+                    <div class="stat-value">48</div>
+                    <div class="stat-label" data-i18n="dashboard.empleados_activos">Empleados activos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-row">
+                        <div class="stat-icon" style="background:#E8FAF2"><img src="icons/tick-checkbox-svgrepo-com.svg" alt=""></div>
+                        <span class="stat-badge badge-green">94%</span>
+                    </div>
+                    <div class="stat-value">43</div>
+                    <div class="stat-label" data-i18n="dashboard.presentes_hoy">Presentes hoy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-row">
+                        <div class="stat-icon" style="background:#FFF8E6"><img src="icons/clock-square-svgrepo-com.svg" alt=""></div>
+                        <span class="stat-badge badge-red">4 pend.</span>
+                    </div>
+                    <div class="stat-value">4</div>
+                    <div class="stat-label" data-i18n="dashboard.sol_pendientes">Solicitudes pendientes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-row">
+                        <div class="stat-icon" style="background:#FEE8EA"><img src="icons/warning-svgrepo-com.svg" alt=""></div>
+                        <span class="stat-badge badge-red">2 hoy</span>
+                    </div>
+                    <div class="stat-value">2</div>
+                    <div class="stat-label" data-i18n="dashboard.inc_abiertas">Incidencias abiertas</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title" data-i18n="dashboard.ultimos_fichajes">Últimos fichajes</span>
+                    <a href="fichajes.html" class="btn btn-ghost btn-sm" data-i18n="dashboard.ver_todos">Ver todos →</a>
+                </div>
+                <div class="table-wrap">
+                    <table id="fichajesTable">
+                        <thead><tr>
+                            <th data-i18n="dashboard.col_empleado">Empleado</th>
+                            <th data-i18n="dashboard.col_tipo">Tipo</th>
+                            <th data-i18n="dashboard.col_hora">Hora</th>
+                            <th data-i18n="dashboard.col_sede">Sede</th>
+                            <th data-i18n="dashboard.col_gps">GPS</th>
+                        </tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="dash-two-col">
+                <div class="card">
+                    <div class="card-header"><span class="card-title" data-i18n="dashboard.presencia_sede">Presencia por sede</span></div>
+                    <div class="card-body">
+                        <div class="sede-row"><span class="sede-name">Sede Central</span><div class="sede-bar-wrap"><div class="sede-bar" style="width:87%"></div></div><span class="sede-pct">87%</span></div>
+                        <div class="sede-row"><span class="sede-name">Sede Norte</span><div class="sede-bar-wrap"><div class="sede-bar" style="width:100%"></div></div><span class="sede-pct">100%</span></div>
+                        <div class="sede-row"><span class="sede-name">Sede Sur</span><div class="sede-bar-wrap"><div class="sede-bar" style="width:75%"></div></div><span class="sede-pct">75%</span></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title" data-i18n="dashboard.acciones_rapidas">Acciones rápidas</span></div>
+                    <div class="card-body quick-actions">
+                        <a href="fichajes.html" class="quick-btn"><span class="quick-icon"><img src="icons/timer-3-second-svgrepo-com.svg" alt=""></span><span data-i18n="dashboard.nuevo_fichaje">Nuevo fichaje manual</span></a>
+                        <a href="solicitudes.html" class="quick-btn"><span class="quick-icon"><img src="icons/clock-square-svgrepo-com.svg" alt=""></span><span data-i18n="dashboard.ver_sol">Ver solicitudes pendientes</span></a>
+                        <a href="incidencias.html" class="quick-btn"><span class="quick-icon"><img src="icons/warning-svgrepo-com.svg" alt=""></span><span data-i18n="dashboard.gestionar_inc">Gestionar incidencias</span></a>
+                        <a href="informes.html" class="quick-btn"><span class="quick-icon"><img src="icons/report-svgrepo-com.svg" alt=""></span><span data-i18n="dashboard.generar_inf">Generar informe</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
 
+<script src="i18n.js"></script>
 <script src="shared.js"></script>
 <script src="dashboard.js"></script>
 </body>

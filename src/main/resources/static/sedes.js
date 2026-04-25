@@ -1,21 +1,62 @@
+let todasLasSedes    = [];
+let selectedSedeId   = null;
+let sedeEditandoId   = null;
 
-let todasLasSedes  = [];
-let selectedSedeId = null;
-let sedeEditandoId = null;
+let mapsReady          = false;
+let modalMap           = null;
+let modalMarker        = null;
+let modalCircle        = null;
+let detailMap          = null;
+let detailMarker       = null;
+let detailCircle       = null;
+let autocompleteWidget = null;
 
-let mapsReady      = false;
-let modalMap       = null;
-let modalMarker    = null;
-let modalCircle    = null;
-let detailMap      = null;
-let detailMarker   = null;
-let detailCircle   = null;
-
-const DEFAULT_LAT  = 40.4168;
-const DEFAULT_LNG  = -3.7038;
+const DEFAULT_LAT = 40.4168;
+const DEFAULT_LNG = -3.7038;
 
 function initGoogleMaps() {
     mapsReady = true;
+}
+
+function initAutocomplete() {
+    const input = document.getElementById('addrSearch');
+    if (!input || !mapsReady) return;
+
+    if (autocompleteWidget) {
+        google.maps.event.clearInstanceListeners(autocompleteWidget);
+    }
+
+    autocompleteWidget = new google.maps.places.Autocomplete(input, {
+        fields: ['formatted_address', 'geometry'],
+        types:  ['geocode', 'establishment'],
+    });
+
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') e.preventDefault();
+    });
+
+    autocompleteWidget.addListener('place_changed', () => {
+        const place = autocompleteWidget.getPlace();
+
+        if (!place.geometry || !place.geometry.location) {
+            showToast(t('sedes.dir_no_encontrada') || 'No se encontró la dirección seleccionada', 'error');
+            return;
+        }
+
+        const lat  = place.geometry.location.lat();
+        const lng  = place.geometry.location.lng();
+        const addr = place.formatted_address;
+
+        document.getElementById('sedeDireccion').value = addr;
+        document.getElementById('sedeLat').value       = lat.toFixed(7);
+        document.getElementById('sedeLon').value       = lng.toFixed(7);
+
+        if (modalMap) {
+            moveModalMarker(lat, lng);
+            modalMap.setCenter({ lat, lng });
+            modalMap.setZoom(zoomForRadius(parseInt(document.getElementById('sedeRadio').value)));
+        }
+    });
 }
 
 async function cargarSedes() {
@@ -57,15 +98,14 @@ function selectSede(id) {
     if (!s) return;
 
     document.getElementById('det-nombre').textContent = s.nombre;
-    document.getElementById('det-dir').textContent    = s.direccion  || '—';
+    document.getElementById('det-dir').textContent    = s.direccion || '—';
     document.getElementById('det-coords').textContent =
         (s.latitud != null && s.longitud != null)
             ? `${s.latitud.toFixed(6)}, ${s.longitud.toFixed(6)}`
             : '—';
-    document.getElementById('det-radio').textContent  = `${s.radioMetros} m`;
-    document.getElementById('det-emp').textContent    = '—';
+    document.getElementById('det-radio').textContent = `${s.radioMetros} m`;
+    document.getElementById('det-emp').textContent   = '—';
 
-    // Mapa detalle
     if (s.latitud != null && s.longitud != null && mapsReady) {
         document.getElementById('mapPlaceholder').style.display = 'none';
         document.getElementById('detailMap').style.display      = 'block';
@@ -95,14 +135,9 @@ function renderDetailMap(lat, lng, radio) {
         });
         detailMarker = new google.maps.Marker({ position: center, map: detailMap });
         detailCircle = new google.maps.Circle({
-            map: detailMap,
-            center,
-            radius: radio,
-            strokeColor: '#3B82F6',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#3B82F6',
-            fillOpacity: 0.12,
+            map: detailMap, center, radius: radio,
+            strokeColor: '#3B82F6', strokeOpacity: 0.8, strokeWeight: 2,
+            fillColor: '#3B82F6', fillOpacity: 0.12,
         });
     } else {
         detailMap.setCenter(center);
@@ -142,21 +177,14 @@ function initModalMap(lat, lng, radio) {
     });
 
     modalCircle = new google.maps.Circle({
-        map: modalMap,
-        center,
-        radius: radio,
-        strokeColor: '#3B82F6',
-        strokeOpacity: 0.9,
-        strokeWeight: 2,
-        fillColor: '#3B82F6',
-        fillOpacity: 0.15,
-        editable: true,
-        draggable: false,
+        map: modalMap, center, radius: radio,
+        strokeColor: '#3B82F6', strokeOpacity: 0.9, strokeWeight: 2,
+        fillColor: '#3B82F6', fillOpacity: 0.15,
+        editable: true, draggable: false,
     });
 
     modalMap.addListener('click', e => {
-        const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-        moveModalMarker(pos.lat, pos.lng);
+        moveModalMarker(e.latLng.lat(), e.latLng.lng());
     });
 
     modalMarker.addListener('dragend', e => {
@@ -164,8 +192,7 @@ function initModalMap(lat, lng, radio) {
     });
 
     modalCircle.addListener('radius_changed', () => {
-        const r = Math.round(modalCircle.getRadius());
-        syncRadioUI(r);
+        syncRadioUI(Math.round(modalCircle.getRadius()));
     });
 }
 
@@ -189,8 +216,8 @@ function onRadioInput(val) {
 }
 
 function syncRadioUI(v) {
-    document.getElementById('sedeRadio').value       = v;
-    document.getElementById('sedeRadioSlider').value = v;
+    document.getElementById('sedeRadio').value        = v;
+    document.getElementById('sedeRadioSlider').value  = v;
     document.getElementById('radioLabel').textContent = v;
     if (modalMap) modalMap.setZoom(zoomForRadius(v));
 }
@@ -204,32 +231,6 @@ function syncMapFromInputs() {
     }
 }
 
-function buscarDireccion() {
-    if (!mapsReady) { showToast('El mapa aún no ha cargado', 'error'); return; }
-    const q = document.getElementById('addrSearch').value.trim();
-    if (!q) { showToast('Escribe una dirección para buscar', 'error'); return; }
-
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ address: q, region: 'es' }, (results, status) => {
-        if (status === 'OK' && results[0]) {
-            const loc = results[0].geometry.location;
-            const lat = loc.lat();
-            const lng = loc.lng();
-            const addr = results[0].formatted_address;
-
-            document.getElementById('sedeDireccion').value = addr;
-            document.getElementById('sedeLat').value       = lat.toFixed(7);
-            document.getElementById('sedeLon').value       = lng.toFixed(7);
-
-            moveModalMarker(lat, lng);
-            modalMap.setCenter({ lat, lng });
-            modalMap.setZoom(zoomForRadius(parseInt(document.getElementById('sedeRadio').value)));
-        } else {
-            showToast('No se encontró la dirección', 'error');
-        }
-    });
-}
-
 function zoomForRadius(r) {
     if (r <= 100)  return 17;
     if (r <= 300)  return 16;
@@ -241,8 +242,8 @@ function zoomForRadius(r) {
 
 function abrirModalNueva() {
     sedeEditandoId = null;
-    document.getElementById('modal-sede-title').textContent = 'Nueva sede';
-    ['sedeNombre','sedeDireccion','sedeLat','sedeLon','addrSearch'].forEach(id => {
+    document.getElementById('modal-sede-title').textContent = t('sedes.modal_nueva') || 'Nueva sede';
+    ['sedeNombre', 'sedeDireccion', 'sedeLat', 'sedeLon', 'addrSearch'].forEach(id => {
         document.getElementById(id).value = '';
     });
     document.getElementById('sedeEstado').value = 'activa';
@@ -250,7 +251,10 @@ function abrirModalNueva() {
     openModal('modal-sede');
 
     setTimeout(() => {
-        if (mapsReady) initModalMap(DEFAULT_LAT, DEFAULT_LNG, 100);
+        if (mapsReady) {
+            initModalMap(DEFAULT_LAT, DEFAULT_LNG, 100);
+            initAutocomplete();
+        }
     }, 150);
 }
 
@@ -259,7 +263,7 @@ function editarSede(id) {
     if (!s) return;
     sedeEditandoId = id;
 
-    document.getElementById('modal-sede-title').textContent = 'Editar sede';
+    document.getElementById('modal-sede-title').textContent = t('sedes.modal_editar') || 'Editar sede';
     document.getElementById('sedeNombre').value    = s.nombre;
     document.getElementById('sedeDireccion').value = s.direccion  || '';
     document.getElementById('sedeLat').value       = s.latitud    ?? '';
@@ -272,7 +276,10 @@ function editarSede(id) {
     const lat = s.latitud  ?? DEFAULT_LAT;
     const lng = s.longitud ?? DEFAULT_LNG;
     setTimeout(() => {
-        if (mapsReady) initModalMap(lat, lng, s.radioMetros);
+        if (mapsReady) {
+            initModalMap(lat, lng, s.radioMetros);
+            initAutocomplete();
+        }
     }, 150);
 }
 
@@ -284,26 +291,22 @@ async function guardarSede() {
     const radio     = parseInt(document.getElementById('sedeRadio').value);
     const activa    = document.getElementById('sedeEstado').value === 'activa';
 
-    if (!nombre)                        { showToast('El nombre es obligatorio', 'error');       return; }
-    if (isNaN(latitud) || isNaN(longitud)) { showToast('Introduce coordenadas válidas', 'error'); return; }
+    if (!nombre)                           { showToast(t('sedes.err_nombre') || 'El nombre es obligatorio',        'error'); return; }
+    if (isNaN(latitud) || isNaN(longitud)) { showToast(t('sedes.err_coords') || 'Selecciona una dirección válida', 'error'); return; }
 
     const body = {
         idEmpresa: parseInt(sessionStorage.getItem('empresaId')),
         nombre, direccion: direccion || null,
-        latitud, longitud, radioMetros: radio, activa
+        latitud, longitud, radioMetros: radio, activa,
     };
 
     try {
         if (sedeEditandoId) {
-            await apiFetch(`${API}/sedes/${sedeEditandoId}`, {
-                method: 'PUT', body: JSON.stringify(body)
-            });
-            showToast('Sede actualizada', 'success');
+            await apiFetch(`${API}/sedes/${sedeEditandoId}`, { method: 'PUT', body: JSON.stringify(body) });
+            showToast(t('sedes.actualizada') || 'Sede actualizada', 'success');
         } else {
-            await apiFetch(`${API}/sedes`, {
-                method: 'POST', body: JSON.stringify(body)
-            });
-            showToast('Sede creada correctamente', 'success');
+            await apiFetch(`${API}/sedes`, { method: 'POST', body: JSON.stringify(body) });
+            showToast(t('sedes.creada') || 'Sede creada correctamente', 'success');
         }
         sedeEditandoId = null;
         closeModal('modal-sede');
@@ -320,11 +323,12 @@ async function eliminarSede(id) {
             selectedSedeId = null;
             document.getElementById('mapPlaceholder').style.display = 'flex';
             document.getElementById('detailMap').style.display      = 'none';
-            document.getElementById('mapPlaceholder').querySelector('span').textContent = 'Selecciona una sede';
-            ['det-nombre','det-dir','det-coords','det-radio','det-emp']
+            document.getElementById('mapPlaceholder').querySelector('span').textContent =
+                t('sedes.selecciona') || 'Selecciona una sede';
+            ['det-nombre', 'det-dir', 'det-coords', 'det-radio', 'det-emp']
                 .forEach(id => document.getElementById(id).textContent = '—');
         }
-        showToast('Sede eliminada', 'success');
+        showToast(t('sedes.eliminada') || 'Sede eliminada', 'success');
         cargarSedes();
     } catch (e) {
         showToast(e.message, 'error');
