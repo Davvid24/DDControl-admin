@@ -14,8 +14,8 @@
         <div class="nav-section"><span class="nav-label" data-i18n="nav.principal">Principal</span>
             <a class="nav-item" data-page="dashboard"   href="dashboard.html"><img src="icons/dashboard-svgrepo-com.svg" alt=""><span data-i18n="nav.dashboard">Dashboard</span></a>
             <a class="nav-item" data-page="fichajes"    href="fichajes.html"><img src="icons/clock-two-svgrepo-com.svg" alt=""><span data-i18n="nav.fichajes">Fichajes</span></a>
-            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt=""><span data-i18n="nav.solicitudes">Solicitudes</span><span class="nav-badge">4</span></a>
-            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt=""><span data-i18n="nav.incidencias">Incidencias</span><span class="nav-badge">2</span></a>
+            <a class="nav-item" data-page="solicitudes" href="solicitudes.html"><img src="icons/paper-svgrepo-com.svg" alt=""><span data-i18n="nav.solicitudes">Solicitudes</span><span class="nav-badge" style="display:none"></span></a>
+            <a class="nav-item" data-page="incidencias" href="incidencias.html"><img src="icons/warning-1-svgrepo-com.svg" alt=""><span data-i18n="nav.incidencias">Incidencias</span><span class="nav-badge" style="display:none"></span></a>
         </div>
         <div class="nav-section"><span class="nav-label" data-i18n="nav.gestion">Gestión</span>
             <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt=""><span data-i18n="nav.empleados">Empleados</span></a>
@@ -39,7 +39,7 @@
             <div class="topbar-spacer"></div>
             <select id="filtroRol"><option value="" data-i18n="empleados.todos_roles">Todos los roles</option><option>Empleado</option><option>Supervisor</option><option>Admin</option></select>
             <select id="filtroSede"><option value="" data-i18n="empleados.todas_sedes">Todas las sedes</option></select>
-            <button class="btn btn-primary" onclick="openModal('modal-empleado')" data-i18n="empleados.nuevo">+ Nuevo empleado</button>
+            <button class="btn btn-primary" onclick="abrirModalNuevo()" data-i18n="empleados.nuevo">+ Nuevo empleado</button>
         </div>
         <div style="flex:1;overflow-y:auto;background:white">
             <table id="empleadosTable">

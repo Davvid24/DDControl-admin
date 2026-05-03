@@ -185,3 +185,31 @@ async function apiFetch(url, options = {}) {
     if (res.status === 204) return null;
     return res.json();
 }
+
+async function actualizarBadges() {
+    try {
+        const [solicitudes, incidencias] = await Promise.all([
+            apiFetch(`${API}/solicitudes`),
+            apiFetch(`${API}/incidencias`)
+        ]);
+
+        const pendientesSol = solicitudes.filter(s => s.estado.toLowerCase() === 'pendiente').length;
+        const abiertasInc   = incidencias.filter(i => !i.resuelta).length;
+
+        document.querySelectorAll('.nav-item[data-page="solicitudes"] .nav-badge').forEach(el => {
+            el.textContent = pendientesSol;
+            el.style.display = pendientesSol > 0 ? '' : 'none';
+        });
+        document.querySelectorAll('.nav-item[data-page="incidencias"] .nav-badge').forEach(el => {
+            el.textContent = abiertasInc;
+            el.style.display = abiertasInc > 0 ? '' : 'none';
+        });
+
+    } catch (e) {
+        //Esto es para que si no hay incidencias o solicitudes lo pille pero no haga nada
+    }
+}
+
+if (sessionStorage.getItem('token')) {
+    document.addEventListener('DOMContentLoaded', actualizarBadges);
+}

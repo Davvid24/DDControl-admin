@@ -97,6 +97,7 @@ function editarEmpleado(id) {
     document.getElementById('empRol').value       = e.rol;
     document.getElementById('empTipo').value      = e.tipoEmpleado;
     document.getElementById('empPass').value      = '';
+    document.querySelector('#modal-empleado .btn-primary').textContent = 'Guardar cambios';
     openModal('modal-empleado');
 }
 
@@ -201,6 +202,7 @@ function abrirModalNuevo() {
     if (errorBox) { errorBox.innerHTML = ''; errorBox.style.display = 'none'; }
     empleadoEditandoId = null;
     document.getElementById('modal-emp-title').textContent = 'Nuevo empleado';
+    document.querySelector('#modal-empleado .btn-primary').textContent = 'Crear empleado';
     ['empNombre','empApellidos','empEmail','empPass','empTel','empDepto'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
