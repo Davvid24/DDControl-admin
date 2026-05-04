@@ -1,7 +1,22 @@
-let todosLosTurnos   = [];
+let todosLosTurnos    = [];
 let todosLosEmpleados = [];
 let turnoAsignandoId  = null;
 let turnoEditandoId   = null;
+
+function parseDias(desc) {
+    if (!desc) return '—';
+    const match = desc.match(/^\$([^$]*)\$/);
+    return match ? match[1].split('-').join(' · ') : '—';
+}
+
+function parseDesc(desc) {
+    if (!desc) return '';
+    return desc.replace(/^\$[^$]*\$/, '') || '';
+}
+
+function buildDescripcion(dias, desc) {
+    return `$${dias}$${desc}`;
+}
 
 async function cargarTurnos() {
     try {
@@ -25,13 +40,12 @@ function renderTable() {
     document.querySelector('#turnosTable tbody').innerHTML = todosLosTurnos.length
         ? todosLosTurnos.map(t => {
             const numEmp = t.empleados?.length ?? 0;
-            const dias = (t.diasSemana ?? []).join(' · ') || '—';
-
+            const dias   = parseDias(t.descripcion);
             return `<tr>
                 <td style="font-weight:600">${t.nombre}</td>
                 <td><code style="font-family:var(--mono)">${t.horaEntrada}</code></td>
                 <td><code style="font-family:var(--mono)">${t.horaSalida}</code></td>
-<td style="color:var(--text-muted);font-size:12px">${dias}</td>
+                <td style="color:var(--text-muted);font-size:12px">${dias}</td>
                 <td>
                     <button class="act-btn" onclick="abrirAsignar(${t.id})">
                         ${numEmp} empleado${numEmp !== 1 ? 's' : ''}
@@ -55,7 +69,6 @@ async function abrirAsignar(idTurno) {
     const turno = todosLosTurnos.find(t => t.id === idTurno);
     document.getElementById('asignar-turno-nombre').textContent = turno?.nombre ?? '';
 
-    // Empleados ya asignados a este turno
     const asignadosIds = new Set((turno?.empleados ?? []).map(e => e.id));
 
     document.getElementById('asignar-lista').innerHTML = todosLosEmpleados.length
@@ -67,7 +80,7 @@ async function abrirAsignar(idTurno) {
             return `<label style="display:flex;align-items:center;gap:12px;padding:8px 10px;
                                   border-radius:8px;cursor:pointer;transition:background .15s"
                           onmouseover="this.style.background='var(--surface)'"
-                          onmouseout="this.style.background=''"}>
+                          onmouseout="this.style.background=''">
                 <input type="checkbox" value="${e.id}" ${checked}
                        style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer">
                 <div style="width:32px;height:32px;border-radius:50%;background:${color};
@@ -107,15 +120,18 @@ function editarTurno(id) {
     const t = todosLosTurnos.find(x => x.id === id);
     if (!t) return;
     turnoEditandoId = id;
-    document.getElementById('turnoId').value       = t.id;
-    document.getElementById('turnoNombre').value   = t.nombre;
-    document.getElementById('turnoEntrada').value  = t.horaEntrada;
-    document.getElementById('turnoSalida').value   = t.horaSalida;
-    document.getElementById('turnoDesc').value     = t.descripcion || '';
+
+    document.getElementById('turnoId').value      = t.id;
+    document.getElementById('turnoNombre').value  = t.nombre;
+    document.getElementById('turnoEntrada').value = t.horaEntrada;
+    document.getElementById('turnoSalida').value  = t.horaSalida;
+    document.getElementById('turnoDesc').value    = parseDesc(t.descripcion);
     document.getElementById('form-title').textContent = 'Editar turno';
-    resetDias();
+
+    const diasStr   = parseDias(t.descripcion);
+    const diasArray = diasStr === '—' ? [] : diasStr.split(' · ');
     document.querySelectorAll('.day-btn').forEach(btn => {
-        const on = (t.diasSemana ?? []).includes(btn.dataset.day);
+        const on = diasArray.includes(btn.dataset.day);
         btn.classList.toggle('day-on',  on);
         btn.classList.toggle('day-off', !on);
     });
@@ -131,14 +147,15 @@ async function guardarTurno() {
     if (!nombre)             { showToast('El nombre es obligatorio', 'error');   return; }
     if (!entrada || !salida) { showToast('Las horas son obligatorias', 'error'); return; }
 
+    const dias = [...document.querySelectorAll('.day-btn.day-on')]
+        .map(b => b.dataset.day).join('-');
+
     const body = {
         idEmpresa:   parseInt(sessionStorage.getItem('empresaId')),
         nombre,
         horaEntrada: entrada,
         horaSalida:  salida,
-        descripcion: desc || null,
-        diasSemana:  dias
-
+        descripcion: buildDescripcion(dias, desc)
     };
 
     try {

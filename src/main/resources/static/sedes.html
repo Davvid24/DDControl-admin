@@ -190,5 +190,19 @@
 <script src="shared.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClby51erWdP8wgIkCz7_MRmFsATCda-04&libraries=places&callback=initGoogleMaps" async defer></script>
 <script src="sedes.js"></script>
+<div class="modal-overlay" id="modal-emp-sede">
+    <div class="modal" style="max-width:440px">
+        <div class="modal-header">
+            <span class="modal-title" id="modal-emp-sede-titulo">Empleados</span>
+            <button class="modal-close" onclick="closeModal('modal-emp-sede')">×</button>
+        </div>
+        <div class="modal-body" style="max-height:400px;overflow-y:auto">
+            <div id="modal-emp-sede-lista"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('modal-emp-sede')">Cerrar</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

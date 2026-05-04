@@ -4,6 +4,11 @@ let empleadoEditandoId = null;
 async function cargarEmpleados() {
     try {
         todosLosEmpleados = await apiFetch(`${API}/usuarios`);
+        for (const e of todosLosEmpleados) {
+            const sedes = await apiFetch(`${API}/empleado-sede/usuario/${e.id}`);
+            e.nombreSede = sedes?.length > 0 ? sedes[0].nombreSede : '—';
+            e.idSedeActual = sedes?.length > 0 ? sedes[0].idSede : null;
+        }
         renderTable();
     } catch (e) {
         showToast(e.message || 'Error al cargar empleados', 'error');
@@ -66,7 +71,7 @@ function renderTable() {
             </div>
           </div></td>
           <td>${e.tipoEmpleado || '—'}</td>
-          <td>${e.nombreEmpresa || '—'}</td>
+          <td>${e.nombreSede || '—'}</td>
           <td>${e.rol}</td>
           <td>${estadoBadge(e.activo)}</td>
           <td style="color:var(--text-muted);font-size:12px">${formatDate(e.fechaAlta)}</td>
@@ -98,9 +103,17 @@ function editarEmpleado(id) {
     document.getElementById('empTipo').value      = e.tipoEmpleado;
     document.getElementById('empPass').value      = '';
     document.querySelector('#modal-empleado .btn-primary').textContent = 'Guardar cambios';
+
+    if (e.idSedeActual) {
+        document.getElementById('empSede').value = e.idSedeActual;
+    }
+
+    if (e.idTurno) {
+        document.getElementById('empTurno').value = e.idTurno;
+    }
+
     openModal('modal-empleado');
 }
-
 async function toggleActivo(id, activo) {
     try {
         await apiFetch(`${API}/usuarios/${id}/toggle-activo`, { method: 'PATCH' });
@@ -108,6 +121,26 @@ async function toggleActivo(id, activo) {
         cargarEmpleados();
     } catch (e) {
         showToast(e.message, 'error');
+    }
+}
+
+async function actualizarSede(idUsuario, idSede) {
+    const sedesActuales = await apiFetch(`${API}/empleado-sede/usuario/${idUsuario}`);
+    console.log('sedes actuales:', sedesActuales);
+    for (const s of sedesActuales) {
+        console.log('eliminando:', `${API}/empleado-sede/usuario/${idUsuario}/sede/${s.idSede}`);
+        await apiFetch(`${API}/empleado-sede/usuario/${idUsuario}/sede/${s.idSede}`, {
+            method: 'DELETE'
+        });
+        console.log('eliminada ok');
+    }
+    if (idSede) {
+        console.log('asignando sede:', idSede);
+        await apiFetch(`${API}/empleado-sede`, {
+            method: 'POST',
+            body: JSON.stringify({ idUsuario, idSede: parseInt(idSede) })
+        });
+        console.log('asignada ok');
     }
 }
 
@@ -133,22 +166,29 @@ async function guardarEmpleado() {
         idEmpresa:    parseInt(sessionStorage.getItem('empresaId')),
         nombre, apellidos, email, rol,
         tipoEmpleado: tipo,
-        telefono:     tel   || null,
-        idSede:       idSede  ? parseInt(idSede)  : null,
+        telefono:     tel    || null,
         idTurno:      idTurno ? parseInt(idTurno) : null,
-        password:     password || undefined
     };
+
+    if (password) body.password = password;
 
     try {
         if (empleadoEditandoId) {
             await apiFetch(`${API}/usuarios/${empleadoEditandoId}`, {
                 method: 'PUT', body: JSON.stringify(body)
             });
+            try {
+
+                await actualizarSede(empleadoEditandoId, idSede);
+            } catch(e) {
+                console.error('error en actualizarSede:', e);
+            }
             showToast('Empleado actualizado', 'success');
         } else {
-            await apiFetch(`${API}/usuarios`, {
+            const nuevo = await apiFetch(`${API}/usuarios`, {
                 method: 'POST', body: JSON.stringify(body)
             });
+            await actualizarSede(nuevo.id, idSede);
             showToast('Empleado creado correctamente', 'success');
         }
         empleadoEditandoId = null;

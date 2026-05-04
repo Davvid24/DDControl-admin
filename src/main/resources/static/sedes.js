@@ -39,7 +39,7 @@ function initAutocomplete() {
         const place = autocompleteWidget.getPlace();
 
         if (!place.geometry || !place.geometry.location) {
-            showToast(t('sedes.dir_no_encontrada') || 'No se encontró la dirección seleccionada', 'error');
+            showToast('No se encontró la dirección seleccionada', 'error');
             return;
         }
 
@@ -62,6 +62,10 @@ function initAutocomplete() {
 async function cargarSedes() {
     try {
         todasLasSedes = await apiFetch(`${API}/sedes`);
+        for (const s of todasLasSedes) {
+            const empleados = await apiFetch(`${API}/empleado-sede/sede/${s.id}`);
+            s.empleados = empleados ?? [];
+        }
         renderTable();
     } catch (e) {
         showToast(e.message || 'Error al cargar sedes', 'error');
@@ -75,7 +79,11 @@ function renderTable() {
           onclick="selectSede(${s.id})" style="cursor:pointer">
         <td style="font-weight:600">${s.nombre}</td>
         <td>${s.direccion || '—'}</td>
-        <td>—</td>
+        <td>
+            <button class="act-btn" onclick="event.stopPropagation();abrirEmpleadosSede(${s.id})">
+                ${s.empleados.length} empleado${s.empleados.length !== 1 ? 's' : ''}
+            </button>
+        </td>
         <td><code style="font-family:var(--mono);font-size:12px">${s.radioMetros} m</code></td>
         <td>${s.activa
             ? '<span class="badge badge-green">Activa</span>'
@@ -92,6 +100,35 @@ function renderTable() {
        </td></tr>`;
 }
 
+async function abrirEmpleadosSede(idSede) {
+    const sede = todasLasSedes.find(s => s.id === idSede);
+    if (!sede) return;
+
+    document.getElementById('modal-emp-sede-titulo').textContent = `Empleados — ${sede.nombre}`;
+
+    const lista = document.getElementById('modal-emp-sede-lista');
+    if (!sede.empleados.length) {
+        lista.innerHTML = `<p style="color:var(--text-muted);text-align:center;padding:20px">No hay empleados asignados</p>`;
+    } else {
+        lista.innerHTML = sede.empleados.map(e => {
+            const nombre = e.nombreUsuario;
+            const color  = avatarColor(nombre);
+            const ini    = initials(nombre);
+            return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+                <div style="width:36px;height:36px;border-radius:50%;background:${color};
+                            display:flex;align-items:center;justify-content:center;
+                            color:white;font-size:12px;font-weight:700;flex-shrink:0">${ini}</div>
+                <div>
+                    <div style="font-weight:600;font-size:13px">${nombre}</div>
+                    <div style="font-size:12px;color:var(--text-muted)">Asignado desde ${e.fechaAsignacion}</div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    openModal('modal-emp-sede');
+}
+
 function selectSede(id) {
     selectedSedeId = id;
     const s = todasLasSedes.find(x => x.id === id);
@@ -104,7 +141,7 @@ function selectSede(id) {
             ? `${s.latitud.toFixed(6)}, ${s.longitud.toFixed(6)}`
             : '—';
     document.getElementById('det-radio').textContent = `${s.radioMetros} m`;
-    document.getElementById('det-emp').textContent   = '—';
+    document.getElementById('det-emp').textContent   = `${s.empleados.length} empleado${s.empleados.length !== 1 ? 's' : ''}`;
 
     if (s.latitud != null && s.longitud != null && mapsReady) {
         document.getElementById('mapPlaceholder').style.display = 'none';
@@ -242,7 +279,7 @@ function zoomForRadius(r) {
 
 function abrirModalNueva() {
     sedeEditandoId = null;
-    document.getElementById('modal-sede-title').textContent = t('sedes.modal_nueva') || 'Nueva sede';
+    document.getElementById('modal-sede-title').textContent = 'Nueva sede';
     ['sedeNombre', 'sedeDireccion', 'sedeLat', 'sedeLon', 'addrSearch'].forEach(id => {
         document.getElementById(id).value = '';
     });
@@ -263,7 +300,7 @@ function editarSede(id) {
     if (!s) return;
     sedeEditandoId = id;
 
-    document.getElementById('modal-sede-title').textContent = t('sedes.modal_editar') || 'Editar sede';
+    document.getElementById('modal-sede-title').textContent = 'Editar sede';
     document.getElementById('sedeNombre').value    = s.nombre;
     document.getElementById('sedeDireccion').value = s.direccion  || '';
     document.getElementById('sedeLat').value       = s.latitud    ?? '';
@@ -291,8 +328,8 @@ async function guardarSede() {
     const radio     = parseInt(document.getElementById('sedeRadio').value);
     const activa    = document.getElementById('sedeEstado').value === 'activa';
 
-    if (!nombre)                           { showToast(t('sedes.err_nombre') || 'El nombre es obligatorio',        'error'); return; }
-    if (isNaN(latitud) || isNaN(longitud)) { showToast(t('sedes.err_coords') || 'Selecciona una dirección válida', 'error'); return; }
+    if (!nombre)                           { showToast('El nombre es obligatorio', 'error'); return; }
+    if (isNaN(latitud) || isNaN(longitud)) { showToast('Selecciona una dirección válida', 'error'); return; }
 
     const body = {
         idEmpresa: parseInt(sessionStorage.getItem('empresaId')),
@@ -303,10 +340,10 @@ async function guardarSede() {
     try {
         if (sedeEditandoId) {
             await apiFetch(`${API}/sedes/${sedeEditandoId}`, { method: 'PUT', body: JSON.stringify(body) });
-            showToast(t('sedes.actualizada') || 'Sede actualizada', 'success');
+            showToast('Sede actualizada', 'success');
         } else {
             await apiFetch(`${API}/sedes`, { method: 'POST', body: JSON.stringify(body) });
-            showToast(t('sedes.creada') || 'Sede creada correctamente', 'success');
+            showToast('Sede creada correctamente', 'success');
         }
         sedeEditandoId = null;
         closeModal('modal-sede');
@@ -323,12 +360,11 @@ async function eliminarSede(id) {
             selectedSedeId = null;
             document.getElementById('mapPlaceholder').style.display = 'flex';
             document.getElementById('detailMap').style.display      = 'none';
-            document.getElementById('mapPlaceholder').querySelector('span').textContent =
-                t('sedes.selecciona') || 'Selecciona una sede';
+            document.getElementById('mapPlaceholder').querySelector('span').textContent = 'Selecciona una sede';
             ['det-nombre', 'det-dir', 'det-coords', 'det-radio', 'det-emp']
                 .forEach(id => document.getElementById(id).textContent = '—');
         }
-        showToast(t('sedes.eliminada') || 'Sede eliminada', 'success');
+        showToast('Sede eliminada', 'success');
         cargarSedes();
     } catch (e) {
         showToast(e.message, 'error');
