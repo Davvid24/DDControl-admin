@@ -25,11 +25,13 @@ function renderTable() {
     document.querySelector('#turnosTable tbody').innerHTML = todosLosTurnos.length
         ? todosLosTurnos.map(t => {
             const numEmp = t.empleados?.length ?? 0;
+            const dias = (t.diasSemana ?? []).join(' · ') || '—';
+
             return `<tr>
                 <td style="font-weight:600">${t.nombre}</td>
                 <td><code style="font-family:var(--mono)">${t.horaEntrada}</code></td>
                 <td><code style="font-family:var(--mono)">${t.horaSalida}</code></td>
-                <td style="color:var(--text-muted);font-size:12px">${t.descripcion || '—'}</td>
+<td style="color:var(--text-muted);font-size:12px">${dias}</td>
                 <td>
                     <button class="act-btn" onclick="abrirAsignar(${t.id})">
                         ${numEmp} empleado${numEmp !== 1 ? 's' : ''}
@@ -112,6 +114,11 @@ function editarTurno(id) {
     document.getElementById('turnoDesc').value     = t.descripcion || '';
     document.getElementById('form-title').textContent = 'Editar turno';
     resetDias();
+    document.querySelectorAll('.day-btn').forEach(btn => {
+        const on = (t.diasSemana ?? []).includes(btn.dataset.day);
+        btn.classList.toggle('day-on',  on);
+        btn.classList.toggle('day-off', !on);
+    });
 }
 
 async function guardarTurno() {
@@ -129,7 +136,9 @@ async function guardarTurno() {
         nombre,
         horaEntrada: entrada,
         horaSalida:  salida,
-        descripcion: desc || null
+        descripcion: desc || null,
+        diasSemana:  dias
+
     };
 
     try {
