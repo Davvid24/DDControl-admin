@@ -46,6 +46,8 @@ public class UsuarioService {
         if (usuarioRepository.existsByEmail(req.getEmail()))
             throw new IllegalArgumentException("Ya existe un usuario con ese email");
 
+        if (req.getPassword() == null || req.getPassword().length() < 8)
+            throw new IllegalArgumentException("La contraseña debe tener al menos 8 caracteres");
         Empresa empresa = empresaRepository.findById(req.getIdEmpresa())
                 .orElseThrow(() -> new EntityNotFoundException("Empresa no encontrada: " + req.getIdEmpresa()));
 

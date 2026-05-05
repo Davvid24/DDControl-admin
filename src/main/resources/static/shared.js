@@ -176,6 +176,7 @@ async function apiFetch(url, options = {}) {
 
     if (!res.ok) {
         const err = await res.json().catch(() => ({}));
+        console.error('apiFetch error:', res.status, res.url, err);
         const error = new Error(err.mensaje || `Error ${res.status}`);
         error.errores = err.errores || null;
         error.data = err;
