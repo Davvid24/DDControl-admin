@@ -52,7 +52,8 @@ public class SecurityConfig {
                                 "/*.js",
                                 "/favicon.ico",
                                 "/icons/**",
-                                "/images/**"
+                                "/images/**",
+                                "/api/calendario/**"
 
                         ).permitAll()
                         .anyRequest().authenticated()
