@@ -54,9 +54,14 @@ public class SecurityConfig {
                                 "/icons/**",
                                 "/images/**",
                                 "/api/calendario/**"
-
                         ).permitAll()
-                        .requestMatchers("/api/fichajes/**", "/api/solicitudes/**", "/api/incidencias/**").authenticated()
+                        .requestMatchers(
+                                "/api/fichajes/**",
+                                "/api/solicitudes/**",
+                                "/api/incidencias/**",
+                                "/api/empleado-sede/usuario/**",
+                                "/api/sedes/empresa/**"
+                        ).authenticated()
                         .requestMatchers("/api/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
