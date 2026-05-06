@@ -98,19 +98,55 @@
 <script src="shared.js"></script>
 <script src="turnos.js"></script>
 <div class="modal-overlay" id="modal-asignar">
-    <div class="modal" style="max-width:480px">
+    <div class="modal" style="max-width:500px">
         <div class="modal-header">
             <span class="modal-title">Asignar empleados — <span id="asignar-turno-nombre"></span></span>
             <button class="modal-close" onclick="closeModal('modal-asignar')">×</button>
         </div>
-        <div class="modal-body" style="max-height:400px;overflow-y:auto">
-            <div class="search-box">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8BA4C0" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" id="asignar-busqueda" placeholder="Buscar empleado…" style="width:100%" oninput="filtrarAsignar(this.value)">
+        <div class="modal-body" style="display:flex;flex-direction:column;gap:12px">
+            <div class="tabs-bar" style="margin:-24px -24px 0;border-radius:0">
+                <div class="tab active" id="tab-por-empleado" onclick="switchAsignarTab('empleado', this)">Por empleado</div>
+                <div class="tab" id="tab-por-depto" onclick="switchAsignarTab('depto', this)">Por departamento</div>
             </div>
-            <div id="asignar-lista" style="display:flex;flex-direction:column;gap:8px"></div>
+            <div id="asignar-panel-empleado" style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+                <div class="search-box">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8BA4C0" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="asignar-busqueda" placeholder="Buscar empleado…" style="width:100%" oninput="filtrarAsignar(this.value)">
+                </div>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;padding:0 4px">
+                    <input type="checkbox" id="chk-select-all" style="width:15px;height:15px;accent-color:var(--blue);cursor:pointer" onchange="toggleSelectAll(this.checked)">
+                    Seleccionar todos
+                </label>
+                <div id="asignar-lista" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto"></div>
+            </div>
+            <div id="asignar-panel-depto" style="display:none;flex-direction:column;gap:10px;margin-top:8px">
+                <div class="field">
+                    <label>Selecciona un departamento</label>
+                    <select id="asignar-depto-select" onchange="onDeptoChange(this.value)"
+                            style="font-family:var(--font);font-size:13px;color:var(--navy);background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;outline:none;width:100%">
+                        <option value="">— Elige un departamento —</option>
+                        <option value="Comercial">Comercial</option>
+                        <option value="RRHH">RRHH</option>
+                        <option value="Operaciones">Operaciones</option>
+                        <option value="Administración">Administración</option>
+                        <option value="Técnico">Técnico</option>
+                        <option value="Dirección">Dirección</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div id="asignar-depto-preview" style="display:none;flex-direction:column;gap:4px">
+                    <div style="font-size:12px;color:var(--text-muted);font-weight:600;padding:0 4px">
+                        Empleados en este departamento: <span id="asignar-depto-count" style="color:var(--navy)">0</span>
+                    </div>
+                    <div id="asignar-depto-lista" style="max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:4px"></div>
+                </div>
+                <div id="asignar-depto-empty" style="display:none;text-align:center;padding:20px;color:var(--text-label);font-size:13px">
+                    No hay empleados en este departamento
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
+            <div style="flex:1;font-size:12px;color:var(--text-muted)" id="asignar-summary"></div>
             <button class="btn btn-secondary" onclick="closeModal('modal-asignar')">Cancelar</button>
             <button class="btn btn-primary" onclick="confirmarAsignacion()">Guardar asignación</button>
         </div>

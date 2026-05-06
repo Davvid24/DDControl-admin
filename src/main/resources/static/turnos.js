@@ -2,6 +2,7 @@ let todosLosTurnos    = [];
 let todosLosEmpleados = [];
 let turnoAsignandoId  = null;
 let turnoEditandoId   = null;
+let asignarTabActual  = 'empleado';
 
 function parseDias(desc) {
     if (!desc) return '—';
@@ -52,10 +53,8 @@ function renderTable() {
                     </button>
                 </td>
                 <td><div class="actions">
-                    <button class="act-btn act-edit"
-                        onclick="editarTurno(${t.id})">Editar</button>
-                    <button class="act-btn act-delete"
-                        onclick="confirmDelete('¿Eliminar turno?', () => eliminarTurno(${t.id}))">Eliminar</button>
+                    <button class="act-btn act-edit" onclick="editarTurno(${t.id})">Editar</button>
+                    <button class="act-btn act-delete" onclick="confirmDelete('¿Eliminar turno?', () => eliminarTurno(${t.id}))">Eliminar</button>
                 </div></td>
             </tr>`;
         }).join('')
@@ -64,31 +63,39 @@ function renderTable() {
            </td></tr>`;
 }
 
+function getAsignadosIds() {
+    const turno = todosLosTurnos.find(t => t.id === turnoAsignandoId);
+    return new Set((turno?.empleados ?? []).map(e => e.id));
+}
+
+function renderEmpleadoRow(e, asignadosIds) {
+    const checked = asignadosIds.has(e.id) ? 'checked' : '';
+    const nombre  = `${e.nombre} ${e.apellidos}`;
+    const color   = avatarColor(nombre);
+    const ini     = initials(nombre);
+    return `<label style="display:flex;align-items:center;gap:12px;padding:8px 10px;
+                          border-radius:8px;cursor:pointer;transition:background .15s"
+                  onmouseover="this.style.background='var(--blue-light)'"
+                  onmouseout="this.style.background=''">
+        <input type="checkbox" value="${e.id}" ${checked}
+               style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer"
+               onchange="actualizarSummary()">
+        <div style="width:32px;height:32px;border-radius:50%;background:${color};
+                    display:flex;align-items:center;justify-content:center;
+                    color:white;font-size:12px;font-weight:700;flex-shrink:0">${ini}</div>
+        <div>
+            <div style="font-weight:600;font-size:13px">${nombre}</div>
+            <div style="font-size:12px;color:var(--text-muted)">${e.tipoEmpleado || e.email}</div>
+        </div>
+    </label>`;
+}
+
 function renderAsignarLista(empleados, asignadosIds) {
     document.getElementById('asignar-lista').innerHTML = empleados.length
-        ? empleados.map(e => {
-            const checked = asignadosIds.has(e.id) ? 'checked' : '';
-            const nombre  = `${e.nombre} ${e.apellidos}`;
-            const color   = avatarColor(nombre);
-            const ini     = initials(nombre);
-            return `<label style="display:flex;align-items:center;gap:12px;padding:8px 10px;
-                                  border-radius:8px;cursor:pointer;transition:background .15s"
-                          onmouseover="this.style.background='var(--surface)'"
-                          onmouseout="this.style.background=''">
-                <input type="checkbox" value="${e.id}" ${checked}
-                       style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer">
-                <div style="width:32px;height:32px;border-radius:50%;background:${color};
-                            display:flex;align-items:center;justify-content:center;
-                            color:white;font-size:12px;font-weight:700;flex-shrink:0">${ini}</div>
-                <div>
-                    <div style="font-weight:600;font-size:13px">${nombre}</div>
-                    <div style="font-size:12px;color:var(--text-muted)">${e.email}</div>
-                </div>
-            </label>`;
-        }).join('')
-        : `<p style="color:var(--text-muted);text-align:center;padding:20px">
-             No se encontraron empleados
-           </p>`;
+        ? empleados.map(e => renderEmpleadoRow(e, asignadosIds)).join('')
+        : `<p style="color:var(--text-muted);text-align:center;padding:20px">No se encontraron empleados</p>`;
+    actualizarSelectAll();
+    actualizarSummary();
 }
 
 async function abrirAsignar(idTurno) {
@@ -96,27 +103,91 @@ async function abrirAsignar(idTurno) {
     const turno = todosLosTurnos.find(t => t.id === idTurno);
     document.getElementById('asignar-turno-nombre').textContent = turno?.nombre ?? '';
     document.getElementById('asignar-busqueda').value = '';
+    document.getElementById('asignar-depto-select').value = '';
+    document.getElementById('asignar-depto-preview').style.display = 'none';
+    document.getElementById('asignar-depto-empty').style.display   = 'none';
 
-    const asignadosIds = new Set((turno?.empleados ?? []).map(e => e.id));
-    renderAsignarLista(todosLosEmpleados, asignadosIds);
+    switchAsignarTab('empleado', document.getElementById('tab-por-empleado'));
+    renderAsignarLista(todosLosEmpleados, getAsignadosIds());
     openModal('modal-asignar');
 }
 
+function switchAsignarTab(tab, tabEl) {
+    asignarTabActual = tab;
+    document.querySelectorAll('#modal-asignar .tab').forEach(t => t.classList.remove('active'));
+    tabEl.classList.add('active');
+    document.getElementById('asignar-panel-empleado').style.display = tab === 'empleado' ? 'flex' : 'none';
+    document.getElementById('asignar-panel-depto').style.display    = tab === 'depto'    ? 'flex' : 'none';
+    actualizarSummary();
+}
+
 function filtrarAsignar(query) {
-    const turno = todosLosTurnos.find(t => t.id === turnoAsignandoId);
-    const asignadosIds = new Set((turno?.empleados ?? []).map(e => e.id));
     const q = query.toLowerCase().trim();
     const filtrados = q
         ? todosLosEmpleados.filter(e =>
             `${e.nombre} ${e.apellidos}`.toLowerCase().includes(q) ||
-            (e.email || '').toLowerCase().includes(q))
+            (e.email || '').toLowerCase().includes(q) ||
+            (e.tipoEmpleado || '').toLowerCase().includes(q))
         : todosLosEmpleados;
-    renderAsignarLista(filtrados, asignadosIds);
+    renderAsignarLista(filtrados, getAsignadosIds());
+}
+
+function onDeptoChange(depto) {
+    const preview = document.getElementById('asignar-depto-preview');
+    const empty   = document.getElementById('asignar-depto-empty');
+    const lista   = document.getElementById('asignar-depto-lista');
+    const count   = document.getElementById('asignar-depto-count');
+
+    if (!depto) {
+        preview.style.display = 'none';
+        empty.style.display   = 'none';
+        return;
+    }
+
+    const filtrados = todosLosEmpleados.filter(e =>
+        (e.tipoEmpleado || '').toLowerCase() === depto.toLowerCase()
+    );
+
+    if (!filtrados.length) {
+        preview.style.display = 'none';
+        empty.style.display   = 'block';
+        return;
+    }
+
+    empty.style.display   = 'none';
+    preview.style.display = 'flex';
+    count.textContent     = filtrados.length;
+
+    const asignadosIds = getAsignadosIds();
+    lista.innerHTML = filtrados.map(e => renderEmpleadoRow(e, asignadosIds)).join('');
+    actualizarSummary();
+}
+
+function toggleSelectAll(checked) {
+    const checkboxes = document.querySelectorAll('#asignar-lista input[type=checkbox]');
+    checkboxes.forEach(c => c.checked = checked);
+    actualizarSummary();
+}
+
+function actualizarSelectAll() {
+    const checkboxes = [...document.querySelectorAll('#asignar-lista input[type=checkbox]')];
+    const chkAll = document.getElementById('chk-select-all');
+    if (!chkAll || !checkboxes.length) return;
+    chkAll.checked       = checkboxes.every(c => c.checked);
+    chkAll.indeterminate = !chkAll.checked && checkboxes.some(c => c.checked);
+}
+
+function actualizarSummary() {
+    const todos = document.querySelectorAll('#asignar-lista input[type=checkbox], #asignar-depto-lista input[type=checkbox]');
+    const seleccionados = [...todos].filter(c => c.checked).length;
+    const el = document.getElementById('asignar-summary');
+    if (el) el.textContent = seleccionados > 0 ? `${seleccionados} seleccionado${seleccionados !== 1 ? 's' : ''}` : '';
+    actualizarSelectAll();
 }
 
 async function confirmarAsignacion() {
-    const checkboxes = document.querySelectorAll('#asignar-lista input[type=checkbox]');
-    const ids = [...checkboxes].filter(c => c.checked).map(c => parseInt(c.value));
+    const todosChk = document.querySelectorAll('#asignar-lista input[type=checkbox], #asignar-depto-lista input[type=checkbox]');
+    const ids = [...new Set([...todosChk].filter(c => c.checked).map(c => parseInt(c.value)))];
 
     try {
         await apiFetch(`${API}/turnos/${turnoAsignandoId}/asignar-empleados`, {
