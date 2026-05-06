@@ -67,6 +67,9 @@ async function cargarSedes() {
             s.empleados = empleados ?? [];
         }
         renderTable();
+        if (todasLasSedes.length > 0) {
+            selectSede(todasLasSedes[0].id);
+        }
     } catch (e) {
         showToast(e.message || 'Error al cargar sedes', 'error');
     }
