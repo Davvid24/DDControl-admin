@@ -60,7 +60,8 @@ public class SecurityConfig {
                                 "/api/solicitudes/**",
                                 "/api/incidencias/**",
                                 "/api/empleado-sede/usuario/**",
-                                "/api/sedes/empresa/**"
+                                "/api/sedes/empresa/**",
+                                "/api/usuarios/*/fcm-token"
                         ).authenticated()
                         .requestMatchers("/api/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

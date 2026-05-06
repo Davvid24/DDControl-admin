@@ -22,6 +22,7 @@ public class TurnoService {
     private final TurnoRepository turnoRepository;
     private final EmpresaRepository empresaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final FcmService fcmService;
 
     @Transactional(readOnly = true)
     public List<TurnoDTO.Response> findAll() {
@@ -98,6 +99,7 @@ public class TurnoService {
     }
     public void asignarEmpleados(Integer idTurno, List<Integer> idUsuarios) {
         Turno turno = getOrThrow(idTurno);
+
         usuarioRepository.findByTurno_Id(idTurno).forEach(u -> {
             if (!idUsuarios.contains(u.getId())) {
                 u.setTurno(null);
@@ -105,12 +107,21 @@ public class TurnoService {
             }
         });
 
-        // Asignar los nuevos
         idUsuarios.forEach(idU -> {
             Usuario u = usuarioRepository.findById(idU)
                     .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado: " + idU));
+            boolean turnoAnteriorDistinto = u.getTurno() == null || !u.getTurno().getId().equals(idTurno);
             u.setTurno(turno);
             usuarioRepository.save(u);
+
+            if (turnoAnteriorDistinto && u.getFcmToken() != null) {
+                fcmService.enviarNotificacion(
+                        u.getFcmToken(),
+                        "📅 Turno actualizado",
+                        "Se te ha asignado el turno: " + turno.getNombre(),
+                        "turno"
+                );
+            }
         });
     }
 }

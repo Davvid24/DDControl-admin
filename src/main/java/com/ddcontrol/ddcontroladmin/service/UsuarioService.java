@@ -113,6 +113,11 @@ public class UsuarioService {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado: " + id));
     }
+    public void actualizarFcmToken(Integer id, String fcmToken) {
+        Usuario u = getOrThrow(id);
+        u.setFcmToken(fcmToken);
+        usuarioRepository.save(u);
+    }
 
     private UsuarioDTO.Response toResponse(Usuario u) {
         UsuarioDTO.Response r = new UsuarioDTO.Response();

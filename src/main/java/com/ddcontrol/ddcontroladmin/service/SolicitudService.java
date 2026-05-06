@@ -20,6 +20,7 @@ public class SolicitudService {
 
     private final SolicitudRepository solicitudRepository;
     private final UsuarioRepository usuarioRepository;
+    private final FcmService fcmService;
 
     @Transactional(readOnly = true)
     public List<SolicitudDTO.Response> findAll() {
@@ -68,7 +69,21 @@ public class SolicitudService {
         s.setEstado(req.getEstado());
         s.setComentarioAdmin(req.getComentarioAdmin());
         s.setFechaResolucion(Instant.now());
-        return toResponse(solicitudRepository.save(s));
+        Solicitud guardada = solicitudRepository.save(s);
+
+        String fcmToken = s.getIdUsuario().getFcmToken();
+        if (fcmToken != null) {
+            boolean aprobada = req.getEstado().equalsIgnoreCase("APROBADA");
+            fcmService.enviarNotificacion(
+                    fcmToken,
+                    aprobada ? "Solicitud aprobada" : "Solicitud rechazada",
+                    "Tu solicitud de " + s.getTipo() + " del " + s.getFechaInicio() + " al " + s.getFechaFin() +
+                            (aprobada ? " ha sido aprobada." : " ha sido rechazada."),
+                    "solicitud"
+            );
+        }
+
+        return toResponse(guardada);
     }
 
     public void delete(Integer id) {
