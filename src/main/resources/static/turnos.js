@@ -64,15 +64,9 @@ function renderTable() {
            </td></tr>`;
 }
 
-async function abrirAsignar(idTurno) {
-    turnoAsignandoId = idTurno;
-    const turno = todosLosTurnos.find(t => t.id === idTurno);
-    document.getElementById('asignar-turno-nombre').textContent = turno?.nombre ?? '';
-
-    const asignadosIds = new Set((turno?.empleados ?? []).map(e => e.id));
-
-    document.getElementById('asignar-lista').innerHTML = todosLosEmpleados.length
-        ? todosLosEmpleados.map(e => {
+function renderAsignarLista(empleados, asignadosIds) {
+    document.getElementById('asignar-lista').innerHTML = empleados.length
+        ? empleados.map(e => {
             const checked = asignadosIds.has(e.id) ? 'checked' : '';
             const nombre  = `${e.nombre} ${e.apellidos}`;
             const color   = avatarColor(nombre);
@@ -93,10 +87,31 @@ async function abrirAsignar(idTurno) {
             </label>`;
         }).join('')
         : `<p style="color:var(--text-muted);text-align:center;padding:20px">
-             No hay empleados disponibles
+             No se encontraron empleados
            </p>`;
+}
 
+async function abrirAsignar(idTurno) {
+    turnoAsignandoId = idTurno;
+    const turno = todosLosTurnos.find(t => t.id === idTurno);
+    document.getElementById('asignar-turno-nombre').textContent = turno?.nombre ?? '';
+    document.getElementById('asignar-busqueda').value = '';
+
+    const asignadosIds = new Set((turno?.empleados ?? []).map(e => e.id));
+    renderAsignarLista(todosLosEmpleados, asignadosIds);
     openModal('modal-asignar');
+}
+
+function filtrarAsignar(query) {
+    const turno = todosLosTurnos.find(t => t.id === turnoAsignandoId);
+    const asignadosIds = new Set((turno?.empleados ?? []).map(e => e.id));
+    const q = query.toLowerCase().trim();
+    const filtrados = q
+        ? todosLosEmpleados.filter(e =>
+            `${e.nombre} ${e.apellidos}`.toLowerCase().includes(q) ||
+            (e.email || '').toLowerCase().includes(q))
+        : todosLosEmpleados;
+    renderAsignarLista(filtrados, asignadosIds);
 }
 
 async function confirmarAsignacion() {
