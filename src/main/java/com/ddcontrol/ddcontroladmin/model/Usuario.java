@@ -80,4 +80,7 @@ public class Usuario {
     @JoinColumn(name = "id_turno")
     private Turno turno;
 
+    @Size(max = 255)
+    @Column(name = "fcm_token")
+    private String fcmToken;
 }

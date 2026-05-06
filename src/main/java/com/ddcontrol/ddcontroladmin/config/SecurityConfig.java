@@ -54,9 +54,15 @@ public class SecurityConfig {
                                 "/icons/**",
                                 "/images/**",
                                 "/api/calendario/**"
-
                         ).permitAll()
-                        .requestMatchers("/api/fichajes/**", "/api/solicitudes/**", "/api/incidencias/**").authenticated()
+                        .requestMatchers(
+                                "/api/fichajes/**",
+                                "/api/solicitudes/**",
+                                "/api/incidencias/**",
+                                "/api/empleado-sede/usuario/**",
+                                "/api/sedes/empresa/**",
+                                "/api/usuarios/*/fcm-token"
+                        ).authenticated()
                         .requestMatchers("/api/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

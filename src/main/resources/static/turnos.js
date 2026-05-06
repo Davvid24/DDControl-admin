@@ -107,6 +107,9 @@ async function abrirAsignar(idTurno) {
     document.getElementById('asignar-depto-preview').style.display = 'none';
     document.getElementById('asignar-depto-empty').style.display   = 'none';
 
+    const chkDepto = document.getElementById('chk-select-all-depto');
+    if (chkDepto) { chkDepto.checked = false; chkDepto.indeterminate = false; }
+
     switchAsignarTab('empleado', document.getElementById('tab-por-empleado'));
     renderAsignarLista(todosLosEmpleados, getAsignadosIds());
     openModal('modal-asignar');
@@ -137,6 +140,7 @@ function onDeptoChange(depto) {
     const empty   = document.getElementById('asignar-depto-empty');
     const lista   = document.getElementById('asignar-depto-lista');
     const count   = document.getElementById('asignar-depto-count');
+    const chkAll  = document.getElementById('chk-select-all-depto');
 
     if (!depto) {
         preview.style.display = 'none';
@@ -157,15 +161,16 @@ function onDeptoChange(depto) {
     empty.style.display   = 'none';
     preview.style.display = 'flex';
     count.textContent     = filtrados.length;
+    if (chkAll) { chkAll.checked = false; chkAll.indeterminate = false; }
 
-    const asignadosIds = getAsignadosIds();
-    lista.innerHTML = filtrados.map(e => renderEmpleadoRow(e, asignadosIds)).join('');
+    lista.innerHTML = filtrados.map(e => renderEmpleadoRow(e, getAsignadosIds())).join('');
+    actualizarSelectAllDepto();
     actualizarSummary();
 }
 
 function toggleSelectAll(checked) {
-    const checkboxes = document.querySelectorAll('#asignar-lista input[type=checkbox]');
-    checkboxes.forEach(c => c.checked = checked);
+    document.querySelectorAll('#asignar-lista input[type=checkbox]')
+        .forEach(c => c.checked = checked);
     actualizarSummary();
 }
 
@@ -177,16 +182,37 @@ function actualizarSelectAll() {
     chkAll.indeterminate = !chkAll.checked && checkboxes.some(c => c.checked);
 }
 
+function toggleSelectAllDepto(checked) {
+    document.querySelectorAll('#asignar-depto-lista input[type=checkbox]')
+        .forEach(c => c.checked = checked);
+    actualizarSummary();
+}
+
+function actualizarSelectAllDepto() {
+    const checkboxes = [...document.querySelectorAll('#asignar-depto-lista input[type=checkbox]')];
+    const chkAll = document.getElementById('chk-select-all-depto');
+    if (!chkAll || !checkboxes.length) return;
+    chkAll.checked       = checkboxes.every(c => c.checked);
+    chkAll.indeterminate = !chkAll.checked && checkboxes.some(c => c.checked);
+}
+
 function actualizarSummary() {
-    const todos = document.querySelectorAll('#asignar-lista input[type=checkbox], #asignar-depto-lista input[type=checkbox]');
+    const todos = document.querySelectorAll(
+        '#asignar-lista input[type=checkbox], #asignar-depto-lista input[type=checkbox]'
+    );
     const seleccionados = [...todos].filter(c => c.checked).length;
     const el = document.getElementById('asignar-summary');
-    if (el) el.textContent = seleccionados > 0 ? `${seleccionados} seleccionado${seleccionados !== 1 ? 's' : ''}` : '';
+    if (el) el.textContent = seleccionados > 0
+        ? `${seleccionados} seleccionado${seleccionados !== 1 ? 's' : ''}`
+        : '';
     actualizarSelectAll();
+    actualizarSelectAllDepto();
 }
 
 async function confirmarAsignacion() {
-    const todosChk = document.querySelectorAll('#asignar-lista input[type=checkbox], #asignar-depto-lista input[type=checkbox]');
+    const todosChk = document.querySelectorAll(
+        '#asignar-lista input[type=checkbox], #asignar-depto-lista input[type=checkbox]'
+    );
     const ids = [...new Set([...todosChk].filter(c => c.checked).map(c => parseInt(c.value)))];
 
     try {

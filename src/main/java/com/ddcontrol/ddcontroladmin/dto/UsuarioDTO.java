@@ -40,6 +40,8 @@ public class UsuarioDTO {
         private String fotoPerfil;
 
         private Integer idTurno;
+        private String fcmToken;
+
 
     }
 
@@ -59,5 +61,7 @@ public class UsuarioDTO {
         private String fotoPerfil;
         private Integer idTurno;
         private String nombreTurno;
+        private String fcmToken;
+
     }
 }
