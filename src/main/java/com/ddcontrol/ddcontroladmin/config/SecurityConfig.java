@@ -56,6 +56,8 @@ public class SecurityConfig {
                                 "/api/calendario/**"
 
                         ).permitAll()
+                        .requestMatchers("/api/fichajes/**", "/api/solicitudes/**", "/api/incidencias/**").authenticated()
+                        .requestMatchers("/api/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

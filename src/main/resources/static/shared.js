@@ -6,7 +6,7 @@ const API = '/api';
         || window.location.pathname === '/'
         || window.location.pathname.endsWith('index.html');
     if (!token && !esLogin) {
-        window.location.href = 'login.html';
+        window.location.replace('login.html');
     }
 })();
 
