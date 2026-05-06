@@ -41,15 +41,23 @@
         </div>
         <div class="filter-bar">
             <span class="filter-label" data-i18n="fichajes.filtrar">Filtrar:</span>
-            <select id="filtroEmpleado"><option value="" data-i18n="fichajes.todos_emp">Todos los empleados</option></select>
-            <select id="filtroSede"><option value="" data-i18n="fichajes.todas_sedes">Todas las sedes</option></select>
-            <input type="date" id="filtroDesde">
-            <input type="date" id="filtroHasta">
-            <select id="filtroTipo">
-                <option value="" data-i18n="fichajes.todos_tipos">Todos los tipos</option>
-                <option value="entrada" data-i18n="fichajes.tipo_entrada">Entrada</option>
-                <option value="salida" data-i18n="fichajes.tipo_salida">Salida</option>
-            </select>
+            <input type="text" id="filtroEmpleado" placeholder="Empleado…" autocomplete="off"
+                   style="width:160px;font-family:var(--font);font-size:13px;color:var(--navy);background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;outline:none">
+            <input type="text" id="filtroSede" placeholder="Sede…" list="listaSedesFichajes" autocomplete="off"
+                   style="width:160px;font-family:var(--font);font-size:13px;color:var(--navy);background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;outline:none">
+            <datalist id="listaSedesFichajes"></datalist>
+            <input type="date" id="filtroDesde"
+                   style="font-family:var(--font);font-size:13px;color:var(--navy);background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;outline:none">
+            <input type="date" id="filtroHasta"
+                   style="font-family:var(--font);font-size:13px;color:var(--navy);background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;outline:none">
+            <input type="text" id="filtroTipo" placeholder="Tipo…" list="listaTiposFichajes" autocomplete="off"
+                   style="width:130px;font-family:var(--font);font-size:13px;color:var(--navy);background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;outline:none">
+            <datalist id="listaTiposFichajes">
+                <option value="entrada">
+                <option value="salida">
+                <option value="pausa_inicio">
+                <option value="pausa_fin">
+            </datalist>
             <div class="topbar-spacer"></div>
             <button class="btn btn-ghost" onclick="exportCSV()" data-i18n="fichajes.exportar">Exportar CSV</button>
         </div>

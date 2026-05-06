@@ -21,7 +21,6 @@
             <a class="nav-item" data-page="empleados"   href="empleados.html"><img src="icons/employees-svgrepo-com (1).svg" alt=""><span data-i18n="nav.empleados">Empleados</span></a>
             <a class="nav-item" data-page="sedes"       href="sedes.html"><img src="icons/headquarters-building-bank-house-svgrepo-com.svg" alt=""><span data-i18n="nav.sedes">Sedes</span></a>
             <a class="nav-item" data-page="turnos"      href="turnos.html"><img src="icons/shifts-team-svgrepo-com.svg" alt=""><span data-i18n="nav.turnos">Turnos</span></a>
-<!--            <a class="nav-item" data-page="informes"    href="informes.html"><img src="icons/reports-svgrepo-com.svg" alt=""><span data-i18n="nav.informes">Informes</span></a>-->
         </div>
         <div class="nav-section"><span class="nav-label" data-i18n="nav.sistema">Sistema</span>
             <a class="nav-item" data-page="configuracion" href="configuracion.html"><img src="icons/settings-svgrepo-com.svg" alt=""><span data-i18n="nav.configuracion">Configuración</span></a>
@@ -36,54 +35,162 @@
     <main>
         <div class="topbar">
             <h1 data-i18n="empleados.titulo">Empleados</h1>
+            <div class="search-box">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8BA4C0" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="busqueda" placeholder="Nombre, email, puesto…" style="width:200px">
+            </div>
             <div class="topbar-spacer"></div>
-            <select id="filtroRol"><option value="" data-i18n="empleados.todos_roles">Todos los roles</option><option>Empleado</option><option>Supervisor</option><option>Admin</option></select>
-            <select id="filtroSede"><option value="" data-i18n="empleados.todas_sedes">Todas las sedes</option></select>
-            <button class="btn btn-primary" onclick="abrirModalNuevo()" data-i18n="empleados.nuevo">+ Nuevo empleado</button>
+            <input type="text" id="filtroRolInput" placeholder="Rol…" list="listaRoles" autocomplete="off"
+                   style="width:140px;font-family:var(--font);font-size:13px;color:var(--navy);background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;outline:none">
+            <datalist id="listaRoles">
+                <option value="Empleado">
+                <option value="Admin">
+            </datalist>
+            <input type="text" id="filtroSedeInput" placeholder="Sede…" list="listaSedes" autocomplete="off"
+                   style="width:160px;font-family:var(--font);font-size:13px;color:var(--navy);background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;outline:none">
+            <datalist id="listaSedes"></datalist>
+            <input type="text" id="filtroEstadoInput" placeholder="Estado…" list="listaEstados" autocomplete="off"
+                   style="width:140px;font-family:var(--font);font-size:13px;color:var(--navy);background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;outline:none">
+            <datalist id="listaEstados">
+                <option value="Activo">
+                <option value="Inactivo">
+            </datalist>
+            <button class="btn btn-ghost" onclick="limpiarFiltros()">Limpiar</button>
+            <button class="btn btn-primary" onclick="abrirModalNuevo()">+ Nuevo empleado</button>
         </div>
         <div style="flex:1;overflow-y:auto;background:white">
             <table id="empleadosTable">
                 <thead><tr>
-                    <th data-i18n="empleados.col_empleado">Empleado</th>
-                    <th data-i18n="empleados.col_depto">Departamento</th>
-                    <th data-i18n="empleados.col_sede">Sede(s)</th>
-                    <th data-i18n="empleados.col_turno">Turno</th>
-                    <th data-i18n="empleados.col_estado">Estado</th>
-                    <th data-i18n="empleados.col_ult">Último fichaje</th>
-                    <th data-i18n="empleados.col_acc">Acciones</th>
+                    <th>Empleado</th>
+                    <th>Puesto / Departamento</th>
+                    <th>Sede(s)</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Alta</th>
+                    <th>Acciones</th>
                 </tr></thead>
                 <tbody></tbody>
             </table>
         </div>
     </main>
 </div>
-<div class="modal-overlay" id="modal-empleado">
+
+<div class="modal-overlay" id="modal-empleado-nuevo">
     <div class="modal">
         <div class="modal-header">
-            <span class="modal-title" id="modal-emp-title" data-i18n="empleados.modal_titulo">Nuevo empleado</span>
-            <button class="modal-close" onclick="closeModal('modal-empleado')">×</button>
+            <span class="modal-title">Nuevo empleado</span>
+            <button class="modal-close" onclick="closeModal('modal-empleado-nuevo')">×</button>
         </div>
         <div class="modal-body">
             <div class="form-grid form-2col">
-                <div class="field"><label data-i18n="empleados.nombre">Nombre</label><input type="text" id="empNombre" placeholder="Nombre"></div>
-                <div class="field"><label data-i18n="empleados.apellidos">Apellidos</label><input type="text" id="empApellidos" placeholder="Apellidos"></div>
-                <div class="field form-full"><label data-i18n="empleados.email">Email</label><input type="email" id="empEmail" placeholder="empleado@empresa.com"></div>
-                <div class="field"><label data-i18n="empleados.password">Contraseña</label><input type="password" id="empPass" placeholder="••••••••"></div>
-                <div class="field"><label data-i18n="empleados.telefono">Teléfono</label><input type="tel" id="empTel" placeholder="600000000"></div>
-                <div class="field"><label data-i18n="empleados.rol">Rol</label><select id="empRol"><option>Empleado</option><option>Supervisor</option><option>Admin</option></select></div>
-                <div class="field"><label data-i18n="empleados.tipo">Tipo empleado</label><select id="empTipo"><option>Jornada completa</option><option>Media jornada</option><option>Externo</option></select></div>
-                <div class="field"><label data-i18n="empleados.sede">Sede</label><select id="empSede"></select></div>
-                <div class="field"><label data-i18n="empleados.depto">Departamento</label><input type="text" id="empDepto" placeholder="Ej: Ventas"></div>
-                <div class="field"><label data-i18n="empleados.turno">Turno</label><select id="empTurno"></select></div>
+                <div class="field"><label>Nombre</label><input type="text" id="nuevoNombre" placeholder="Nombre"></div>
+                <div class="field"><label>Apellidos</label><input type="text" id="nuevoApellidos" placeholder="Apellidos"></div>
+                <div class="field form-full"><label>Email</label><input type="email" id="nuevoEmail" placeholder="empleado@empresa.com"></div>
+                <div class="field"><label>Contraseña</label><input type="password" id="nuevoPass" placeholder="Mín. 8 caracteres"></div>
+                <div class="field"><label>Teléfono</label><input type="tel" id="nuevoTel" placeholder="600000000"></div>
+                <div class="field"><label>Rol</label>
+                    <select id="nuevoRol"><option>Empleado</option><option>Admin</option></select>
+                </div>
+                <div class="field"><label>Puesto</label>
+                    <select id="nuevoTipo">
+                        <option>Comercial</option>
+                        <option>RRHH</option>
+                        <option>Operaciones</option>
+                        <option>Administración</option>
+                        <option>Técnico</option>
+                        <option>Dirección</option>
+                        <option>Otro</option>
+                    </select>
+                </div>
+                <div class="field"><label>Sede</label><select id="nuevoSede"></select></div>
+                <div class="field form-full"><label>Turno</label><select id="nuevoTurno"></select></div>
             </div>
+            <div id="nuevoErrorBox" style="display:none;margin-top:12px;padding:12px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#dc2626;font-size:13px;line-height:1.6"></div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('modal-empleado')" data-i18n="empleados.cancelar">Cancelar</button>
-            <button class="btn btn-secondary" onclick="limpiarFormularioEmpleado()">Limpiar</button>
-            <button class="btn btn-primary" onclick="guardarEmpleado()" data-i18n="empleados.crear">Crear empleado</button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-empleado-nuevo')">Cancelar</button>
+            <button class="btn btn-secondary" onclick="limpiarNuevo()">Limpiar</button>
+            <button class="btn btn-primary" onclick="guardarNuevoEmpleado()">Crear empleado</button>
         </div>
     </div>
 </div>
+
+<div class="modal-overlay" id="modal-empleado-editar">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title">Editar empleado</span>
+            <button class="modal-close" onclick="closeModal('modal-empleado-editar')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid form-2col">
+                <div class="field"><label>Nombre</label><input type="text" id="editNombre" readonly style="background:#F0F5FB;color:var(--text-muted);cursor:default"></div>
+                <div class="field"><label>Apellidos</label><input type="text" id="editApellidos" readonly style="background:#F0F5FB;color:var(--text-muted);cursor:default"></div>
+                <div class="field form-full"><label>Email</label><input type="email" id="editEmail" readonly style="background:#F0F5FB;color:var(--text-muted);cursor:default"></div>
+                <div class="field"><label>Teléfono</label><input type="tel" id="editTel" placeholder="600000000"></div>
+                <div class="field"><label>Rol</label>
+                    <select id="editRol"><option>Empleado</option><option>Admin</option></select>
+                </div>
+                <div class="field"><label>Puesto</label>
+                    <select id="editTipo">
+                        <option>Comercial</option>
+                        <option>RRHH</option>
+                        <option>Operaciones</option>
+                        <option>Administración</option>
+                        <option>Técnico</option>
+                        <option>Dirección</option>
+                        <option>Otro</option>
+                    </select>
+                </div>
+                <div class="field"><label>Sede</label><select id="editSede"></select></div>
+                <div class="field"><label>Turno</label><select id="editTurno"></select></div>
+                <div class="field form-full">
+                    <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="abrirModalPassword()">
+                        🔑 Cambiar contraseña
+                    </button>
+                </div>
+            </div>
+            <div id="editErrorBox" style="display:none;margin-top:12px;padding:12px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#dc2626;font-size:13px;line-height:1.6"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('modal-empleado-editar')">Cancelar</button>
+            <button class="btn btn-primary" onclick="guardarEdicionEmpleado()">Guardar cambios</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-cambiar-pass">
+    <div class="modal" style="max-width:420px">
+        <div class="modal-header">
+            <span class="modal-title">Cambiar contraseña</span>
+            <button class="modal-close" onclick="closeModal('modal-cambiar-pass')">×</button>
+        </div>
+        <div class="modal-body">
+            <div style="background:#FFF8E6;border:1px solid #F59E0B;border-radius:8px;padding:12px 14px;font-size:13px;color:#92400E;margin-bottom:16px">
+                ⚠️ Estás a punto de cambiar la contraseña de este empleado. Esta acción no se puede deshacer.
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <label>Nueva contraseña</label>
+                    <input type="password" id="newPass" placeholder="Mín. 8 caracteres" oninput="checkPassStrength(this.value)">
+                    <div style="height:4px;border-radius:2px;margin-top:6px;background:#EBF2FB;overflow:hidden">
+                        <div id="passStrengthBar" style="height:100%;border-radius:2px;transition:width .3s,background .3s;width:0%;background:#E84855"></div>
+                    </div>
+                    <span id="passStrengthLabel" style="font-size:11px;color:var(--text-label);margin-top:4px"></span>
+                </div>
+                <div class="field">
+                    <label>Confirmar contraseña</label>
+                    <input type="password" id="confirmPass" placeholder="Repite la contraseña">
+                </div>
+            </div>
+            <div id="passErrorBox" style="display:none;margin-top:12px;padding:12px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#dc2626;font-size:13px"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('modal-cambiar-pass')">Cancelar</button>
+            <button class="btn btn-danger" onclick="confirmarCambioPassword()">Confirmar cambio</button>
+        </div>
+    </div>
+</div>
+
 <script src="i18n.js"></script>
 <script src="shared.js"></script>
 <script src="empleados.js"></script>

@@ -36,9 +36,9 @@
     <main>
         <div class="topbar"><h1 data-i18n="solicitudes.titulo">Solicitudes</h1></div>
         <div class="tabs-bar">
-            <div class="tab active" onclick="filterEstado('pendiente', this)"><span data-i18n="solicitudes.pendientes">Pendientes</span> <span id="cnt-pendiente">(4)</span></div>
+            <div class="tab active" onclick="filterEstado('pendiente', this)"><span data-i18n="solicitudes.pendientes">Pendientes</span> <span id="cnt-pendiente">()</span></div>
             <div class="tab" onclick="filterEstado('aprobada', this)" data-i18n="solicitudes.aprobadas">Aprobadas</div>
-            <div class="tab" onclick="filterEstado('denegada', this)" data-i18n="solicitudes.rechazadas">Rechazadas</div>
+            <div class="tab" onclick="filterEstado('rechazada', this)" data-i18n="solicitudes.rechazadas">Rechazadas</div>
             <div class="tab" onclick="filterEstado('', this)" data-i18n="solicitudes.todas">Todas</div>
         </div>
         <div style="flex:1;overflow-y:auto;background:white">

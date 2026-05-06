@@ -1,4 +1,3 @@
-
 let todasLasSolicitudes = [];
 let estadoFiltro = 'pendiente';
 let resolucionPendiente = null;
@@ -13,11 +12,10 @@ async function cargarSolicitudes() {
 }
 
 function filterEstado(estado, tabEl) {
-    estadoFiltro = estado.toLowerCase();  // ← lowercase
+    estadoFiltro = estado.toLowerCase();
     activateTab(tabEl);
     renderTable();
 }
-
 
 function renderTable() {
     const data = estadoFiltro
@@ -30,41 +28,49 @@ function renderTable() {
             const color  = avatarColor(nombre);
             const ini    = initials(nombre);
 
-            const tipoBadgeClass = s.tipo === 'VACACIONES' ? 'badge-blue'
-                : s.tipo === 'BAJA'    ? 'badge-yellow'
-                    : 'badge-indigo';
+            const tipoBadgeClass = s.tipo === 'VACACIONES'   ? 'badge-blue'
+                : s.tipo === 'BAJA'         ? 'badge-yellow'
+                    : s.tipo === 'AUSENCIA'     ? 'badge-indigo'
+                        : s.tipo === 'CAMBIO_TURNO' ? 'badge-gray'
+                            : 'badge-gray';
+
+            const tipoLabel = s.tipo === 'CAMBIO_TURNO' ? 'Cambio turno'
+                : s.tipo === 'VACACIONES'   ? 'Vacaciones'
+                    : s.tipo === 'BAJA'         ? 'Baja'
+                        : s.tipo === 'AUSENCIA'     ? 'Ausencia'
+                            : s.tipo;
 
             const periodo = `${formatDate(s.fechaInicio)} – ${formatDate(s.fechaFin)}`;
 
-            const estadoBadge = s.estado.toLowerCase() === 'pendiente'
-                ? '<span class="badge badge-yellow">Pendiente</span>'
-                : s.estado.toLowerCase() === 'aprobada'
-                    ? '<span class="badge badge-green">Aprobada</span>'
-                    : '<span class="badge badge-red">Denegada</span>';
+            const estadoNorm = s.estado.toLowerCase();
+            const estadoBadge = estadoNorm === 'pendiente'  ? '<span class="badge badge-yellow">Pendiente</span>'
+                : estadoNorm === 'aprobada'   ? '<span class="badge badge-green">Aprobada</span>'
+                    : estadoNorm === 'rechazada'  ? '<span class="badge badge-red">Rechazada</span>'
+                        : `<span class="badge badge-gray">${s.estado}</span>`;
 
-            const acciones = s.estado.toLowerCase() === 'pendiente'
+            const acciones = estadoNorm === 'pendiente'
                 ? `<div class="actions">
-         <button class="act-btn act-approve" onclick="iniciarResolucion(${s.id},'APROBADA')">Aprobar</button>
-         <button class="act-btn act-deny"    onclick="iniciarResolucion(${s.id},'RECHAZADA')">Denegar</button>
-       </div>`
+                     <button class="act-btn act-approve" onclick="iniciarResolucion(${s.id},'APROBADA')">Aprobar</button>
+                     <button class="act-btn act-deny"    onclick="iniciarResolucion(${s.id},'RECHAZADA')">Denegar</button>
+                   </div>`
                 : estadoBadge;
 
             return `<tr>
-          <td><div class="emp-cell">
-            <div class="emp-avatar" style="background:${color}">${ini}</div>
-            ${nombre}
-          </div></td>
-          <td><span class="badge ${tipoBadgeClass}">${s.tipo}</span></td>
-          <td>${periodo}</td>
-          <td style="color:var(--text-muted)">${s.motivo || '—'}</td>
-          <td>${formatDate(s.fechaSolicitud)}</td>
-          <td>${s.comentarioResolucion || '—'}</td>
-          <td>${acciones}</td>
-        </tr>`;
+              <td><div class="emp-cell">
+                <div class="emp-avatar" style="background:${color}">${ini}</div>
+                ${nombre}
+              </div></td>
+              <td><span class="badge ${tipoBadgeClass}">${tipoLabel}</span></td>
+              <td>${periodo}</td>
+              <td style="color:var(--text-muted)">${s.motivo || '—'}</td>
+              <td>${formatDate(s.fechaSolicitud)}</td>
+              <td>${s.comentarioResolucion || '—'}</td>
+              <td>${acciones}</td>
+            </tr>`;
         }).join('')
         : `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-label)">
-         No hay solicitudes en esta categoría
-       </td></tr>`;
+             No hay solicitudes en esta categoría
+           </td></tr>`;
 
     const cnt = todasLasSolicitudes.filter(s => s.estado.toLowerCase() === 'pendiente').length;
     const el  = document.getElementById('cnt-pendiente');

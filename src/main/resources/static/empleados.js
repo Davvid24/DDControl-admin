@@ -1,13 +1,14 @@
 let todosLosEmpleados = [];
 let empleadoEditandoId = null;
+let nuevaPasswordPendiente = null;
 
 async function cargarEmpleados() {
     try {
         todosLosEmpleados = await apiFetch(`${API}/usuarios`);
         for (const e of todosLosEmpleados) {
             const sedes = await apiFetch(`${API}/empleado-sede/usuario/${e.id}`);
-            e.nombreSede = sedes?.length > 0 ? sedes[0].nombreSede : '—';
-            e.idSedeActual = sedes?.length > 0 ? sedes[0].idSede : null;
+            e.nombreSede   = sedes?.length > 0 ? sedes[0].nombreSede : '—';
+            e.idSedeActual = sedes?.length > 0 ? sedes[0].idSede     : null;
         }
         renderTable();
     } catch (e) {
@@ -20,22 +21,22 @@ async function cargarSedesYTurnos() {
         const idEmpresa = parseInt(sessionStorage.getItem('empresaId'));
 
         const sedes = await apiFetch(`${API}/sedes?idEmpresa=${idEmpresa}`);
-        const selSede    = document.getElementById('empSede');
-        const filtroSede = document.getElementById('filtroSede');
+        const listaSedes = document.getElementById('listaSedes');
+        ['nuevoSede', 'editSede'].forEach(id => {
+            const sel = document.getElementById(id);
+            sedes.forEach(s => sel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.nombre}</option>`));
+        });
         sedes.forEach(s => {
-            selSede.insertAdjacentHTML('beforeend',
-                `<option value="${s.id}">${s.nombre}</option>`);
-            filtroSede.insertAdjacentHTML('beforeend',
-                `<option value="${s.nombre}">${s.nombre}</option>`);
+            const opt = document.createElement('option');
+            opt.value = s.nombre;
+            listaSedes.appendChild(opt);
         });
 
         const turnos = await apiFetch(`${API}/turnos?idEmpresa=${idEmpresa}`);
-        const selTurno = document.getElementById('empTurno');
-        turnos.forEach(t => {
-            selTurno.insertAdjacentHTML('beforeend',
-                `<option value="${t.id}">${t.nombre}</option>`);
+        ['nuevoTurno', 'editTurno'].forEach(id => {
+            const sel = document.getElementById(id);
+            turnos.forEach(t => sel.insertAdjacentHTML('beforeend', `<option value="${t.id}">${t.nombre}</option>`));
         });
-
     } catch (e) {
         showToast('Error al cargar sedes/turnos', 'error');
     }
@@ -48,12 +49,26 @@ function estadoBadge(activo) {
 }
 
 function renderTable() {
-    const filtroRol  = document.getElementById('filtroRol').value;
-    const filtroSede = document.getElementById('filtroSede').value;
+    const busqueda   = (document.getElementById('busqueda')?.value          || '').toLowerCase().trim();
+    const filtroRol  = (document.getElementById('filtroRolInput')?.value    || '').toLowerCase().trim();
+    const filtroSede = (document.getElementById('filtroSedeInput')?.value   || '').toLowerCase().trim();
+    const filtroEst  = (document.getElementById('filtroEstadoInput')?.value || '').toLowerCase().trim();
 
     const data = todosLosEmpleados.filter(e => {
-        if (filtroRol  && e.rol           !== filtroRol)  return false;
-        if (filtroSede && e.nombreEmpresa !== filtroSede) return false;
+        if (filtroRol  && !e.rol.toLowerCase().includes(filtroRol))                  return false;
+        if (filtroSede && !(e.nombreSede || '').toLowerCase().includes(filtroSede))  return false;
+        if (filtroEst === 'activo'   && !e.activo)  return false;
+        if (filtroEst === 'inactivo' &&  e.activo)  return false;
+        if (busqueda) {
+            const nombre = `${e.nombre} ${e.apellidos}`.toLowerCase();
+            const email  = (e.email        || '').toLowerCase();
+            const puesto = (e.tipoEmpleado || '').toLowerCase();
+            const sede   = (e.nombreSede   || '').toLowerCase();
+            if (!nombre.includes(busqueda) &&
+                !email.includes(busqueda)  &&
+                !puesto.includes(busqueda) &&
+                !sede.includes(busqueda))   return false;
+        }
         return true;
     });
 
@@ -63,61 +78,213 @@ function renderTable() {
             const color  = avatarColor(nombre);
             const ini    = initials(nombre);
             return `<tr>
-          <td><div class="emp-cell">
-            <div class="emp-avatar" style="background:${color}">${ini}</div>
-            <div class="emp-info">
-              <div class="emp-name">${nombre}</div>
-              <div class="emp-email">${e.email}</div>
-            </div>
-          </div></td>
-          <td>${e.tipoEmpleado || '—'}</td>
-          <td>${e.nombreSede || '—'}</td>
-          <td>${e.rol}</td>
-          <td>${estadoBadge(e.activo)}</td>
-          <td style="color:var(--text-muted);font-size:12px">${formatDate(e.fechaAlta)}</td>
-          <td><div class="actions">
-            <button class="act-btn act-edit"   onclick="editarEmpleado(${e.id})">Editar</button>
-            <button class="act-btn act-delete" onclick="toggleActivo(${e.id}, ${e.activo})">
-              ${e.activo ? 'Desactivar' : 'Activar'}
-            </button>
-          </div></td>
-        </tr>`;
+              <td><div class="emp-cell">
+                <div class="emp-avatar" style="background:${color}">${ini}</div>
+                <div class="emp-info">
+                  <div class="emp-name">${nombre}</div>
+                  <div class="emp-email">${e.email}</div>
+                </div>
+              </div></td>
+              <td>${e.tipoEmpleado || '—'}</td>
+              <td>${e.nombreSede   || '—'}</td>
+              <td>${e.rol}</td>
+              <td>${estadoBadge(e.activo)}</td>
+              <td style="color:var(--text-muted);font-size:12px">${formatDate(e.fechaAlta)}</td>
+              <td><div class="actions">
+                <button class="act-btn act-edit"   onclick="editarEmpleado(${e.id})">Editar</button>
+                <button class="act-btn act-delete" onclick="toggleActivo(${e.id}, ${e.activo})">
+                  ${e.activo ? 'Desactivar' : 'Activar'}
+                </button>
+              </div></td>
+            </tr>`;
         }).join('')
         : `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-label)">
-         No hay empleados registrados
-       </td></tr>`;
+             No se encontraron empleados
+           </td></tr>`;
+}
+
+function limpiarFiltros() {
+    document.getElementById('busqueda').value          = '';
+    document.getElementById('filtroRolInput').value    = '';
+    document.getElementById('filtroSedeInput').value   = '';
+    document.getElementById('filtroEstadoInput').value = '';
+    renderTable();
 }
 
 function editarEmpleado(id) {
-    const errorBox = document.getElementById('empErrorBox');
-    if (errorBox) { errorBox.innerHTML = ''; errorBox.style.display = 'none'; }
     const e = todosLosEmpleados.find(x => x.id === id);
     if (!e) return;
-    empleadoEditandoId = id;
-    document.getElementById('modal-emp-title').textContent = 'Editar empleado';
-    document.getElementById('empNombre').value    = e.nombre;
-    document.getElementById('empApellidos').value = e.apellidos;
-    document.getElementById('empEmail').value     = e.email;
-    document.getElementById('empTel').value       = e.telefono || '';
-    document.getElementById('empRol').value       = e.rol;
-    document.getElementById('empTipo').value      = e.tipoEmpleado;
-    document.getElementById('empPass').value      = '';
-    document.querySelector('#modal-empleado .btn-primary').textContent = 'Guardar cambios';
+    empleadoEditandoId     = id;
+    nuevaPasswordPendiente = null;
 
-    if (e.idSedeActual) {
-        document.getElementById('empSede').value = e.idSedeActual;
-    }
+    document.getElementById('editNombre').value    = e.nombre;
+    document.getElementById('editApellidos').value = e.apellidos;
+    document.getElementById('editEmail').value     = e.email;
+    document.getElementById('editTel').value       = e.telefono || '';
+    document.getElementById('editRol').value       = e.rol;
+    document.getElementById('editTipo').value      = e.tipoEmpleado || 'Comercial';
+    if (e.idSedeActual) document.getElementById('editSede').value  = e.idSedeActual;
+    if (e.idTurno)      document.getElementById('editTurno').value = e.idTurno;
 
-    if (e.idTurno) {
-        document.getElementById('empTurno').value = e.idTurno;
-    }
-
-    openModal('modal-empleado');
+    ocultarError('editErrorBox');
+    openModal('modal-empleado-editar');
 }
+
+async function guardarEdicionEmpleado() {
+    const tel     = document.getElementById('editTel').value.trim();
+    const rol     = document.getElementById('editRol').value;
+    const tipo    = document.getElementById('editTipo').value;
+    const idSede  = document.getElementById('editSede').value;
+    const idTurno = document.getElementById('editTurno').value;
+
+    if (tel && !/^\+?[\d\s\-]{7,15}$/.test(tel)) {
+        mostrarError('editErrorBox', 'El teléfono no tiene un formato válido.'); return;
+    }
+
+    const e = todosLosEmpleados.find(x => x.id === empleadoEditandoId);
+    const body = {
+        idEmpresa:    parseInt(sessionStorage.getItem('empresaId')),
+        nombre:       e.nombre,
+        apellidos:    e.apellidos,
+        email:        e.email,
+        rol,
+        tipoEmpleado: tipo,
+        telefono:     tel || null,
+        idTurno:      idTurno ? parseInt(idTurno) : null,
+    };
+
+    if (nuevaPasswordPendiente) body.password = nuevaPasswordPendiente;
+
+    try {
+        await apiFetch(`${API}/usuarios/${empleadoEditandoId}`, {
+            method: 'PUT', body: JSON.stringify(body)
+        });
+        await actualizarSede(empleadoEditandoId, idSede);
+        showToast('Empleado actualizado correctamente', 'success');
+        empleadoEditandoId     = null;
+        nuevaPasswordPendiente = null;
+        closeModal('modal-empleado-editar');
+        cargarEmpleados();
+    } catch (e) {
+        mostrarError('editErrorBox', e.message || 'Error al guardar');
+    }
+}
+
+function abrirModalPassword() {
+    document.getElementById('newPass').value                    = '';
+    document.getElementById('confirmPass').value                = '';
+    document.getElementById('passStrengthBar').style.width      = '0%';
+    document.getElementById('passStrengthBar').style.background = '#E84855';
+    document.getElementById('passStrengthLabel').textContent    = '';
+    ocultarError('passErrorBox');
+    openModal('modal-cambiar-pass');
+}
+
+function checkPassStrength(val) {
+    const bar   = document.getElementById('passStrengthBar');
+    const label = document.getElementById('passStrengthLabel');
+    let score = 0;
+    if (val.length >= 8)           score++;
+    if (/[A-Z]/.test(val))         score++;
+    if (/[0-9]/.test(val))         score++;
+    if (/[^A-Za-z0-9]/.test(val))  score++;
+    const levels = [
+        { w:'0%',   bg:'#E84855', txt:'' },
+        { w:'25%',  bg:'#E84855', txt:'Débil' },
+        { w:'50%',  bg:'#F59E0B', txt:'Regular' },
+        { w:'75%',  bg:'#1A6FD4', txt:'Buena' },
+        { w:'100%', bg:'#0F9A5A', txt:'Fuerte' },
+    ];
+    const lv             = levels[score];
+    bar.style.width      = lv.w;
+    bar.style.background = lv.bg;
+    label.textContent    = lv.txt;
+    label.style.color    = lv.bg;
+}
+
+function confirmarCambioPassword() {
+    const nueva   = document.getElementById('newPass').value;
+    const confirm = document.getElementById('confirmPass').value;
+
+    if (!nueva || nueva.length < 8) {
+        mostrarError('passErrorBox', 'La contraseña debe tener al menos 8 caracteres.'); return;
+    }
+    if (nueva !== confirm) {
+        mostrarError('passErrorBox', 'Las contraseñas no coinciden.'); return;
+    }
+
+    nuevaPasswordPendiente = nueva;
+    closeModal('modal-cambiar-pass');
+    showToast('Contraseña lista. Guarda los cambios para aplicarla.', 'success');
+}
+
+async function guardarNuevoEmpleado() {
+    const nombre    = document.getElementById('nuevoNombre').value.trim();
+    const apellidos = document.getElementById('nuevoApellidos').value.trim();
+    const email     = document.getElementById('nuevoEmail').value.trim();
+    const password  = document.getElementById('nuevoPass').value;
+    const tel       = document.getElementById('nuevoTel').value.trim();
+    const rol       = document.getElementById('nuevoRol').value;
+    const tipo      = document.getElementById('nuevoTipo').value;
+    const idSede    = document.getElementById('nuevoSede').value;
+    const idTurno   = document.getElementById('nuevoTurno').value;
+
+    if (!nombre)    { mostrarError('nuevoErrorBox', 'El nombre es obligatorio.');       return; }
+    if (!apellidos) { mostrarError('nuevoErrorBox', 'Los apellidos son obligatorios.'); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        mostrarError('nuevoErrorBox', 'Introduce un email válido.'); return;
+    }
+    if (!password || password.length < 8) {
+        mostrarError('nuevoErrorBox', 'La contraseña debe tener al menos 8 caracteres.'); return;
+    }
+    if (tel && !/^\+?[\d\s\-]{7,15}$/.test(tel)) {
+        mostrarError('nuevoErrorBox', 'El teléfono no tiene un formato válido.'); return;
+    }
+
+    const body = {
+        idEmpresa:    parseInt(sessionStorage.getItem('empresaId')),
+        nombre, apellidos, email, password, rol,
+        tipoEmpleado: tipo,
+        telefono:     tel || null,
+        idTurno:      idTurno ? parseInt(idTurno) : null,
+    };
+
+    try {
+        const nuevo = await apiFetch(`${API}/usuarios`, { method: 'POST', body: JSON.stringify(body) });
+        await actualizarSede(nuevo.id, idSede);
+        showToast('Empleado creado correctamente', 'success');
+        closeModal('modal-empleado-nuevo');
+        limpiarNuevo();
+        cargarEmpleados();
+    } catch (e) {
+        let msg = e.message || 'Error desconocido';
+        if (e.errores) msg += '<br>' + Object.entries(e.errores)
+            .map(([k, v]) => `• <b>${k}:</b> ${v}`).join('<br>');
+        mostrarError('nuevoErrorBox', msg);
+    }
+}
+
+function limpiarNuevo() {
+    ['nuevoNombre', 'nuevoApellidos', 'nuevoEmail', 'nuevoPass', 'nuevoTel'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    document.getElementById('nuevoRol').selectedIndex   = 0;
+    document.getElementById('nuevoTipo').selectedIndex  = 0;
+    document.getElementById('nuevoSede').selectedIndex  = 0;
+    document.getElementById('nuevoTurno').selectedIndex = 0;
+    ocultarError('nuevoErrorBox');
+}
+
+function abrirModalNuevo() {
+    limpiarNuevo();
+    openModal('modal-empleado-nuevo');
+}
+
 async function toggleActivo(id, activo) {
     try {
         await apiFetch(`${API}/usuarios/${id}/toggle-activo`, { method: 'PATCH' });
-        showToast(activo ? 'Empleado desactivado' : 'Empleado activado', 'info');
+        showToast(activo ? 'Empleado desactivado' : 'Empleado activado', 'success');
         cargarEmpleados();
     } catch (e) {
         showToast(e.message, 'error');
@@ -126,135 +293,33 @@ async function toggleActivo(id, activo) {
 
 async function actualizarSede(idUsuario, idSede) {
     const sedesActuales = await apiFetch(`${API}/empleado-sede/usuario/${idUsuario}`);
-    console.log('sedes actuales:', sedesActuales);
     for (const s of sedesActuales) {
-        console.log('eliminando:', `${API}/empleado-sede/usuario/${idUsuario}/sede/${s.idSede}`);
-        await apiFetch(`${API}/empleado-sede/usuario/${idUsuario}/sede/${s.idSede}`, {
-            method: 'DELETE'
-        });
-        console.log('eliminada ok');
+        await apiFetch(`${API}/empleado-sede/usuario/${idUsuario}/sede/${s.idSede}`, { method: 'DELETE' });
     }
     if (idSede) {
-        console.log('asignando sede:', idSede);
         await apiFetch(`${API}/empleado-sede`, {
             method: 'POST',
             body: JSON.stringify({ idUsuario, idSede: parseInt(idSede) })
         });
-        console.log('asignada ok');
     }
 }
 
-async function guardarEmpleado() {
-    const nombre    = document.getElementById('empNombre').value.trim();
-    const apellidos = document.getElementById('empApellidos').value.trim();
-    const email     = document.getElementById('empEmail').value.trim();
-    const password  = document.getElementById('empPass').value;
-    const rol       = document.getElementById('empRol').value;
-    const tipo      = document.getElementById('empTipo').value;
-    const tel       = document.getElementById('empTel').value.trim();
-    const idSede    = document.getElementById('empSede').value;
-    const idTurno   = document.getElementById('empTurno').value;
-
-    if (!nombre || !apellidos || !email) {
-        showToast('Nombre, apellidos y email son obligatorios', 'error'); return;
-    }
-    if (!empleadoEditandoId && !password) {
-        showToast('La contraseña es obligatoria para nuevos empleados', 'error'); return;
-    }
-
-    const body = {
-        idEmpresa:    parseInt(sessionStorage.getItem('empresaId')),
-        nombre, apellidos, email, rol,
-        tipoEmpleado: tipo,
-        telefono:     tel    || null,
-        idTurno:      idTurno ? parseInt(idTurno) : null,
-    };
-
-    if (password) body.password = password;
-
-    try {
-        if (empleadoEditandoId) {
-            await apiFetch(`${API}/usuarios/${empleadoEditandoId}`, {
-                method: 'PUT', body: JSON.stringify(body)
-            });
-            try {
-
-                await actualizarSede(empleadoEditandoId, idSede);
-            } catch(e) {
-                console.error('error en actualizarSede:', e);
-            }
-            showToast('Empleado actualizado', 'success');
-        } else {
-            const nuevo = await apiFetch(`${API}/usuarios`, {
-                method: 'POST', body: JSON.stringify(body)
-            });
-            await actualizarSede(nuevo.id, idSede);
-            showToast('Empleado creado correctamente', 'success');
-        }
-        empleadoEditandoId = null;
-        limpiarFormularioEmpleado();
-        closeModal('modal-empleado');
-        cargarEmpleados();
-    } catch (e) {
-        let msg = e.message || 'Error desconocido';
-
-        if (e.errores && typeof e.errores === 'object') {
-            const detalle = Object.entries(e.errores)
-                .map(([campo, texto]) => `• <b>${campo}:</b> ${texto}`)
-                .join('<br>');
-            msg += `<br>${detalle}`;
-        }
-
-        showToast(msg, 'error');
-
-        let errorBox = document.getElementById('empErrorBox');
-        if (!errorBox) {
-            errorBox = document.createElement('div');
-            errorBox.id = 'empErrorBox';
-            errorBox.style.cssText = `
-        margin-top:12px; padding:12px 14px;
-        background:#fef2f2; border:1px solid #fecaca;
-        border-radius:8px; color:#dc2626;
-        font-size:13px; line-height:1.6;
-      `;
-            document.querySelector('#modal-empleado .modal-body').appendChild(errorBox);
-        }
-        errorBox.innerHTML = msg;
-        errorBox.style.display = 'block';
-    }
+function mostrarError(boxId, msg) {
+    const box = document.getElementById(boxId);
+    if (!box) return;
+    box.innerHTML     = msg;
+    box.style.display = 'block';
 }
 
-function limpiarFormularioEmpleado() {
-    ['empNombre','empApellidos','empEmail','empPass','empTel','empDepto'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-    document.getElementById('empRol').selectedIndex   = 0;
-    document.getElementById('empTipo').selectedIndex  = 0;
-    document.getElementById('empSede').selectedIndex  = 0;
-    document.getElementById('empTurno').selectedIndex = 0;
-    const errorBox = document.getElementById('empErrorBox');
-    if (errorBox) { errorBox.innerHTML = ''; errorBox.style.display = 'none'; }
+function ocultarError(boxId) {
+    const box = document.getElementById(boxId);
+    if (box) { box.innerHTML = ''; box.style.display = 'none'; }
 }
 
-function abrirModalNuevo() {
-    const errorBox = document.getElementById('empErrorBox');
-    if (errorBox) { errorBox.innerHTML = ''; errorBox.style.display = 'none'; }
-    empleadoEditandoId = null;
-    document.getElementById('modal-emp-title').textContent = 'Nuevo empleado';
-    document.querySelector('#modal-empleado .btn-primary').textContent = 'Crear empleado';
-    ['empNombre','empApellidos','empEmail','empPass','empTel','empDepto'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-    document.getElementById('empSede').selectedIndex  = 0;
-    document.getElementById('empTurno').selectedIndex = 0;
-    openModal('modal-empleado');
-}
-
-['filtroRol','filtroSede'].forEach(id =>
-    document.getElementById(id)?.addEventListener('change', renderTable)
+['filtroRolInput', 'filtroSedeInput', 'filtroEstadoInput'].forEach(id =>
+    document.getElementById(id)?.addEventListener('input', renderTable)
 );
+document.getElementById('busqueda')?.addEventListener('input', renderTable);
 
 cargarSedesYTurnos();
 cargarEmpleados();
