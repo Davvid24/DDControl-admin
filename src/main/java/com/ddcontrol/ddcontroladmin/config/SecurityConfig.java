@@ -52,9 +52,12 @@ public class SecurityConfig {
                                 "/*.js",
                                 "/favicon.ico",
                                 "/icons/**",
-                                "/images/**"
+                                "/images/**",
+                                "/api/calendario/**"
 
                         ).permitAll()
+                        .requestMatchers("/api/fichajes/**", "/api/solicitudes/**", "/api/incidencias/**").authenticated()
+                        .requestMatchers("/api/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
