@@ -4,6 +4,7 @@ import com.ddcontrol.ddcontroladmin.dto.SolicitudDTO;
 import com.ddcontrol.ddcontroladmin.model.Solicitud;
 import com.ddcontrol.ddcontroladmin.model.Usuario;
 import com.ddcontrol.ddcontroladmin.repository.SolicitudRepository;
+import com.ddcontrol.ddcontroladmin.repository.UserDeviceRepository;
 import com.ddcontrol.ddcontroladmin.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class SolicitudService {
     private final SolicitudRepository solicitudRepository;
     private final UsuarioRepository usuarioRepository;
     private final FcmService fcmService;
+    private final UserDeviceRepository userDeviceRepository;
 
     @Transactional(readOnly = true)
     public List<SolicitudDTO.Response> findAll() {
@@ -71,16 +73,22 @@ public class SolicitudService {
         s.setFechaResolucion(Instant.now());
         Solicitud guardada = solicitudRepository.save(s);
 
-        String fcmToken = s.getIdUsuario().getFcmToken();
-        if (fcmToken != null) {
-            boolean aprobada = req.getEstado().equalsIgnoreCase("APROBADA");
-            fcmService.enviarNotificacion(
-                    fcmToken,
-                    aprobada ? "Solicitud aprobada" : "Solicitud rechazada",
-                    "Tu solicitud de " + s.getTipo() + " del " + s.getFechaInicio() + " al " + s.getFechaFin() +
-                            (aprobada ? " ha sido aprobada." : " ha sido rechazada."),
-                    "solicitud"
-            );
+        boolean aprobada = req.getEstado().equalsIgnoreCase("APROBADA");
+        String titulo  = aprobada ? "✅ Solicitud aprobada" : "❌ Solicitud rechazada";
+        String cuerpo  = "Tu solicitud de " + s.getTipo() + " del " + s.getFechaInicio()
+                + " al " + s.getFechaFin()
+                + (aprobada ? " ha sido aprobada." : " ha sido rechazada.");
+
+        String fcmLegacy = s.getIdUsuario().getFcmToken();
+        if (fcmLegacy != null && !fcmLegacy.isBlank()) {
+            fcmService.enviarNotificacion(fcmLegacy, titulo, cuerpo, "solicitud");
+        }
+
+        List<String> tokens = userDeviceRepository.findTokensByUserId(s.getIdUsuario().getId());
+        for (String token : tokens) {
+            if (token != null && !token.isBlank() && !token.equals(fcmLegacy)) {
+                fcmService.enviarNotificacion(token, titulo, cuerpo, "solicitud");
+            }
         }
 
         return toResponse(guardada);

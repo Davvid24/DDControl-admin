@@ -6,6 +6,7 @@ import com.ddcontrol.ddcontroladmin.model.Turno;
 import com.ddcontrol.ddcontroladmin.model.Usuario;
 import com.ddcontrol.ddcontroladmin.repository.EmpresaRepository;
 import com.ddcontrol.ddcontroladmin.repository.TurnoRepository;
+import com.ddcontrol.ddcontroladmin.repository.UserDeviceRepository;
 import com.ddcontrol.ddcontroladmin.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class TurnoService {
     private final EmpresaRepository empresaRepository;
     private final UsuarioRepository usuarioRepository;
     private final FcmService fcmService;
+    private final UserDeviceRepository userDeviceRepository;
 
     @Transactional(readOnly = true)
     public List<TurnoDTO.Response> findAll() {
@@ -71,6 +73,44 @@ public class TurnoService {
         turnoRepository.deleteById(id);
     }
 
+    public void asignarEmpleados(Integer idTurno, List<Integer> idUsuarios) {
+        Turno turno = getOrThrow(idTurno);
+
+        usuarioRepository.findByTurno_Id(idTurno).forEach(u -> {
+            if (!idUsuarios.contains(u.getId())) {
+                u.setTurno(null);
+                usuarioRepository.save(u);
+            }
+        });
+
+        idUsuarios.forEach(idU -> {
+            Usuario u = usuarioRepository.findById(idU)
+                    .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado: " + idU));
+
+            boolean turnoAnteriorDistinto = u.getTurno() == null || !u.getTurno().getId().equals(idTurno);
+            u.setTurno(turno);
+            usuarioRepository.save(u);
+
+            if (!turnoAnteriorDistinto) return;
+
+            String titulo = "📅 Turno actualizado";
+            String cuerpo = "Se te ha asignado el turno: " + turno.getNombre()
+                    + " (" + turno.getHoraEntrada() + " – " + turno.getHoraSalida() + ")";
+
+            String fcmLegacy = u.getFcmToken();
+            if (fcmLegacy != null && !fcmLegacy.isBlank()) {
+                fcmService.enviarNotificacion(fcmLegacy, titulo, cuerpo, "turno");
+            }
+
+            List<String> tokens = userDeviceRepository.findTokensByUserId(u.getId());
+            for (String token : tokens) {
+                if (token != null && !token.isBlank() && !token.equals(fcmLegacy)) {
+                    fcmService.enviarNotificacion(token, titulo, cuerpo, "turno");
+                }
+            }
+        });
+    }
+
     private Turno getOrThrow(Integer id) {
         return turnoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Turno no encontrado: " + id));
@@ -96,32 +136,5 @@ public class TurnoService {
                 }).toList();
         r.setEmpleados(empleados);
         return r;
-    }
-    public void asignarEmpleados(Integer idTurno, List<Integer> idUsuarios) {
-        Turno turno = getOrThrow(idTurno);
-
-        usuarioRepository.findByTurno_Id(idTurno).forEach(u -> {
-            if (!idUsuarios.contains(u.getId())) {
-                u.setTurno(null);
-                usuarioRepository.save(u);
-            }
-        });
-
-        idUsuarios.forEach(idU -> {
-            Usuario u = usuarioRepository.findById(idU)
-                    .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado: " + idU));
-            boolean turnoAnteriorDistinto = u.getTurno() == null || !u.getTurno().getId().equals(idTurno);
-            u.setTurno(turno);
-            usuarioRepository.save(u);
-
-            if (turnoAnteriorDistinto && u.getFcmToken() != null) {
-                fcmService.enviarNotificacion(
-                        u.getFcmToken(),
-                        "📅 Turno actualizado",
-                        "Se te ha asignado el turno: " + turno.getNombre(),
-                        "turno"
-                );
-            }
-        });
     }
 }
