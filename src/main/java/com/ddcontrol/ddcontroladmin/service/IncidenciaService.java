@@ -6,6 +6,7 @@ import com.ddcontrol.ddcontroladmin.model.Incidencia;
 import com.ddcontrol.ddcontroladmin.model.Usuario;
 import com.ddcontrol.ddcontroladmin.repository.FichajeRepository;
 import com.ddcontrol.ddcontroladmin.repository.IncidenciaRepository;
+import com.ddcontrol.ddcontroladmin.repository.UserDeviceRepository;
 import com.ddcontrol.ddcontroladmin.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,8 @@ public class IncidenciaService {
     private final IncidenciaRepository incidenciaRepository;
     private final UsuarioRepository usuarioRepository;
     private final FichajeRepository fichajeRepository;
+    private final FcmService fcmService;
+    private final UserDeviceRepository userDeviceRepository;
 
     @Transactional(readOnly = true)
     public List<IncidenciaDTO.Response> findAll() {
@@ -66,7 +69,22 @@ public class IncidenciaService {
     public IncidenciaDTO.Response marcarResuelta(Integer id) {
         Incidencia i = getOrThrow(id);
         i.setResuelta(true);
-        return toResponse(incidenciaRepository.save(i));
+        Incidencia guardada = incidenciaRepository.save(i);
+
+        List<String> tokens = userDeviceRepository.findTokensByUserId(i.getIdUsuario().getId());
+
+        for (String token : tokens) {
+            if (token != null && !token.isBlank()) {
+                fcmService.enviarNotificacion(
+                        token,
+                        "✅ Incidencia resuelta",
+                        "Tu incidencia de tipo " + i.getTipo() + " ha sido resuelta.",
+                        "incidencia"
+                );
+            }
+        }
+
+        return toResponse(guardada);
     }
 
     public void delete(Integer id) {
