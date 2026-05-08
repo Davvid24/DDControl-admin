@@ -50,8 +50,8 @@ function renderTable() {
 
             const acciones = estadoNorm === 'pendiente'
                 ? `<div class="actions">
-                     <button class="act-btn act-approve" onclick="iniciarResolucion(${s.id},'APROBADA')">Aprobar</button>
-                     <button class="act-btn act-deny"    onclick="iniciarResolucion(${s.id},'RECHAZADA')">Denegar</button>
+                     <button class="act-btn act-approve" onclick="iniciarResolucion(${s.id},'APROBADA')">${t('accion.aprobar')}</button>
+<button class="act-btn act-deny"    onclick="iniciarResolucion(${s.id},'RECHAZADA')">${t('accion.denegar')}</button>
                    </div>`
                 : estadoBadge;
 

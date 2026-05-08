@@ -91,10 +91,10 @@ function renderTable() {
               <td>${estadoBadge(e.activo)}</td>
               <td style="color:var(--text-muted);font-size:12px">${formatDate(e.fechaAlta)}</td>
               <td><div class="actions">
-                <button class="act-btn act-edit"   onclick="editarEmpleado(${e.id})">Editar</button>
-                <button class="act-btn act-delete" onclick="toggleActivo(${e.id}, ${e.activo})">
-                  ${e.activo ? 'Desactivar' : 'Activar'}
-                </button>
+                <button class="act-btn act-edit"   onclick="editarEmpleado(${e.id})">${t('accion.editar')}</button>
+<button class="act-btn act-delete" onclick="toggleActivo(${e.id}, ${e.activo})">
+  ${e.activo ? t('accion.desactivar') : t('accion.activar')}
+</button>
               </div></td>
             </tr>`;
         }).join('')

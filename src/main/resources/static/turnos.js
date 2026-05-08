@@ -39,22 +39,23 @@ async function cargarEmpleados() {
 
 function renderTable() {
     document.querySelector('#turnosTable tbody').innerHTML = todosLosTurnos.length
-        ? todosLosTurnos.map(t => {
-            const numEmp = t.empleados?.length ?? 0;
-            const dias   = parseDias(t.descripcion);
+        ? todosLosTurnos.map(turno => {
+            const numEmp = turno.empleados?.length ?? 0;
+            const dias   = parseDias(turno.descripcion);
+            const empLabel = `${numEmp} ${numEmp !== 1 ? t('accion.empleados') : t('accion.empleado')}`;
             return `<tr>
-                <td style="font-weight:600">${t.nombre}</td>
-                <td><code style="font-family:var(--mono)">${t.horaEntrada}</code></td>
-                <td><code style="font-family:var(--mono)">${t.horaSalida}</code></td>
+                <td style="font-weight:600">${turno.nombre}</td>
+                <td><code style="font-family:var(--mono)">${turno.horaEntrada}</code></td>
+                <td><code style="font-family:var(--mono)">${turno.horaSalida}</code></td>
                 <td style="color:var(--text-muted);font-size:12px">${dias}</td>
                 <td>
-                    <button class="act-btn" onclick="abrirAsignar(${t.id})">
-                        ${numEmp} empleado${numEmp !== 1 ? 's' : ''}
+                    <button class="act-btn" onclick="abrirAsignar(${turno.id})">
+                        ${empLabel}
                     </button>
                 </td>
                 <td><div class="actions">
-                    <button class="act-btn act-edit" onclick="editarTurno(${t.id})">Editar</button>
-                    <button class="act-btn act-delete" onclick="confirmDelete('¿Eliminar turno?', () => eliminarTurno(${t.id}))">Eliminar</button>
+                    <button class="act-btn act-edit" onclick="editarTurno(${turno.id})">${t('accion.editar')}</button>
+                    <button class="act-btn act-delete" onclick="confirmDelete('¿Eliminar turno?', () => eliminarTurno(${turno.id}))">${t('accion.eliminar')}</button>
                 </div></td>
             </tr>`;
         }).join('')
@@ -229,18 +230,18 @@ async function confirmarAsignacion() {
 }
 
 function editarTurno(id) {
-    const t = todosLosTurnos.find(x => x.id === id);
-    if (!t) return;
+    const turno = todosLosTurnos.find(x => x.id === id);
+    if (!turno) return;
     turnoEditandoId = id;
 
-    document.getElementById('turnoId').value      = t.id;
-    document.getElementById('turnoNombre').value  = t.nombre;
-    document.getElementById('turnoEntrada').value = t.horaEntrada;
-    document.getElementById('turnoSalida').value  = t.horaSalida;
-    document.getElementById('turnoDesc').value    = parseDesc(t.descripcion);
-    document.getElementById('form-title').textContent = 'Editar turno';
+    document.getElementById('turnoId').value      = turno.id;
+    document.getElementById('turnoNombre').value  = turno.nombre;
+    document.getElementById('turnoEntrada').value = turno.horaEntrada;
+    document.getElementById('turnoSalida').value  = turno.horaSalida;
+    document.getElementById('turnoDesc').value    = parseDesc(turno.descripcion);
+    document.getElementById('form-title').textContent = t('turnos.editar_titulo') || 'Editar turno';
 
-    const diasStr   = parseDias(t.descripcion);
+    const diasStr   = parseDias(turno.descripcion);
     const diasArray = diasStr === '—' ? [] : diasStr.split(' · ');
     document.querySelectorAll('.day-btn').forEach(btn => {
         const on = diasArray.includes(btn.dataset.day);
@@ -302,7 +303,7 @@ function resetForm() {
     document.getElementById('turnoEntrada').value     = '08:00';
     document.getElementById('turnoSalida').value      = '16:00';
     document.getElementById('turnoDesc').value        = '';
-    document.getElementById('form-title').textContent = 'Nuevo turno';
+    document.getElementById('form-title').textContent = t('turnos.nuevo') || 'Nuevo turno';
     resetDias();
 }
 

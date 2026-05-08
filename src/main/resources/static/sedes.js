@@ -83,19 +83,18 @@ function renderTable() {
         <td style="font-weight:600">${s.nombre}</td>
         <td>${s.direccion || '—'}</td>
         <td>
-            <button class="act-btn" onclick="event.stopPropagation();abrirEmpleadosSede(${s.id})">
-                ${s.empleados.length} empleado${s.empleados.length !== 1 ? 's' : ''}
-            </button>
+            <button class="act-btn" onclick="abrirEmpleadosSede(${s.id})">
+    ${s.empleados.length} ${s.empleados.length !== 1 ? t('accion.empleados') : t('accion.empleado')}
+</button>
         </td>
         <td><code style="font-family:var(--mono);font-size:12px">${s.radioMetros} m</code></td>
         <td>${s.activa
             ? '<span class="badge badge-green">Activa</span>'
             : '<span class="badge badge-gray">Inactiva</span>'}</td>
         <td><div class="actions">
-          <button class="act-btn act-edit"
-            onclick="event.stopPropagation();editarSede(${s.id})">Editar</button>
-          <button class="act-btn act-delete"
-            onclick="event.stopPropagation();confirmDelete('¿Eliminar esta sede?',()=>eliminarSede(${s.id}))">Eliminar</button>
+          <button class="act-btn act-edit"   onclick="event.stopPropagation();editarSede(${s.id})">${t('accion.editar')}</button>
+          <button class="act-btn act-delete" onclick="event.stopPropagation();confirmDelete('¿Eliminar esta sede?',()=>eliminarSede(${s.id}))">${t('accion.eliminar')}</button>
+
         </div></td>
       </tr>`).join('')
         : `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-label)">

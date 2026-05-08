@@ -274,6 +274,17 @@ const TRANSLATIONS = {
     'comun.inactivo':   'Inactivo',
     'comun.dentro':     'Dentro',
     'comun.fuera':      'Fuera',
+    'accion.editar':      'Editar',
+    'accion.eliminar':    'Eliminar',
+    'accion.activar':     'Activar',
+    'accion.desactivar':  'Desactivar',
+    'accion.resolver':    'Resolver',
+    'accion.aprobar':     'Aprobar',
+    'accion.denegar':     'Denegar',
+    'accion.ver_emp':     'empleados',
+    'accion.empleado':    'empleado',
+    'accion.empleados':    'empleados',
+
   },
 
   en: {
@@ -550,6 +561,16 @@ const TRANSLATIONS = {
     'comun.inactivo':   'Inactive',
     'comun.dentro':     'Inside',
     'comun.fuera':      'Outside',
+    'accion.editar':      'Edit',
+    'accion.eliminar':    'Delete',
+    'accion.activar':     'Activate',
+    'accion.desactivar':  'Disable',
+    'accion.resolver':    'Resolve',
+    'accion.aprobar':     'Aprobe',
+    'accion.denegar':     'Denied',
+    'accion.ver_emp':     'employees',
+    'accion.empleado':    'employee',
+    'accion.empleados':    'employees',
   }
 };
 
