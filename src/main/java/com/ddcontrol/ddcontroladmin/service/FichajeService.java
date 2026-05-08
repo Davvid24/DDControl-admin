@@ -6,6 +6,7 @@ import com.ddcontrol.ddcontroladmin.model.Sede;
 import com.ddcontrol.ddcontroladmin.model.Usuario;
 import com.ddcontrol.ddcontroladmin.repository.FichajeRepository;
 import com.ddcontrol.ddcontroladmin.repository.SedeRepository;
+import com.ddcontrol.ddcontroladmin.repository.UserDeviceRepository;
 import com.ddcontrol.ddcontroladmin.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ public class FichajeService {
     private final FichajeRepository fichajeRepository;
     private final UsuarioRepository usuarioRepository;
     private final SedeRepository sedeRepository;
+    private final FcmService fcmService;
+    private final UserDeviceRepository userDeviceRepository;
 
     @Transactional(readOnly = true)
     public List<FichajeDTO.Response> findAll() {
@@ -51,6 +54,8 @@ public class FichajeService {
                 sede.getLatitud(), sede.getLongitud(),
                 sede.getRadioMetros());
 
+        String metodo = req.getMetodo() != null ? req.getMetodo() : "movil";
+
         Fichaje f = new Fichaje();
         f.setIdUsuario(usuario);
         f.setIdSede(sede);
@@ -59,9 +64,31 @@ public class FichajeService {
         f.setLatitudReal(req.getLatitudReal());
         f.setLongitudReal(req.getLongitudReal());
         f.setDentroDeRadio(dentroDeRadio);
-        f.setMetodo(req.getMetodo() != null ? req.getMetodo() : "movil");
+        f.setMetodo(metodo);
         f.setObservaciones(req.getObservaciones());
-        return toResponse(fichajeRepository.save(f));
+
+        FichajeDTO.Response response = toResponse(fichajeRepository.save(f));
+
+        if ("manual".equalsIgnoreCase(metodo)) {
+            String tipoLabel = req.getTipo().equals("entrada") ? "entrada" : "salida";
+            String titulo = "📋 Fichaje manual registrado";
+            String cuerpo = "El administrador ha registrado tu " + tipoLabel
+                    + " manualmente en " + sede.getNombre() + ".";
+
+            String fcmLegacy = usuario.getFcmToken();
+            if (fcmLegacy != null && !fcmLegacy.isBlank()) {
+                fcmService.enviarNotificacion(fcmLegacy, titulo, cuerpo, "fichaje");
+            }
+
+            List<String> tokens = userDeviceRepository.findTokensByUserId(usuario.getId());
+            for (String token : tokens) {
+                if (token != null && !token.isBlank() && !token.equals(fcmLegacy)) {
+                    fcmService.enviarNotificacion(token, titulo, cuerpo, "fichaje");
+                }
+            }
+        }
+
+        return response;
     }
 
     public FichajeDTO.Response update(Integer id, FichajeDTO.Request req) {
@@ -91,11 +118,10 @@ public class FichajeService {
         fichajeRepository.deleteById(id);
     }
 
-
     private boolean calcularDentroDeRadio(BigDecimal latR, BigDecimal lonR,
-                                           BigDecimal latS, BigDecimal lonS,
-                                           Integer radioMetros) {
-        final int R = 6_371_000; // radio Tierra en metros
+                                          BigDecimal latS, BigDecimal lonS,
+                                          Integer radioMetros) {
+        final int R = 6_371_000;
         double lat1 = Math.toRadians(latR.doubleValue());
         double lat2 = Math.toRadians(latS.doubleValue());
         double dLat = Math.toRadians(latS.doubleValue() - latR.doubleValue());

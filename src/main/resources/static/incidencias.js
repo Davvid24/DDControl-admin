@@ -50,7 +50,7 @@ function renderTable() {
             const ultimaCol = viendoHistorial
                 ? `<td>${estadoBadge}</td>`
                 : `<td><div class="actions">
-               <button class="act-btn act-approve" onclick="resolver(${i.id})">Resolver</button>
+               <button class="act-btn act-approve" onclick="resolver(${i.id})">${t('accion.resolver')}</button>
              </div></td>`;
 
             return `<tr>
@@ -66,7 +66,7 @@ function renderTable() {
         </tr>`;
         }).join('')
         : `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--text-label);font-size:15px">
-         ${viendoHistorial ? '📭 No hay incidencias resueltas' : '🎉 No hay incidencias abiertas'}
+         ${viendoHistorial ? 'No hay incidencias resueltas' : 'No hay incidencias abiertas'}
        </td></tr>`;
 }
 
