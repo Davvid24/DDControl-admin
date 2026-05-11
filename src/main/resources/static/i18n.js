@@ -198,8 +198,10 @@ const TRANSLATIONS = {
     'turnos.desc':         'Descripción (opcional)',
     'turnos.cancelar':     'Cancelar',
     'turnos.guardar':      'Guardar',
+    'turnos.editar_titulo': 'Editar turno',
 
-    // Informes
+
+      // Informes
     'informes.titulo':      'Informes',
     'informes.periodo':     'Período:',
     'informes.todos_emp':   'Todos los empleados',
@@ -485,8 +487,10 @@ const TRANSLATIONS = {
     'turnos.desc':         'Description (optional)',
     'turnos.cancelar':     'Cancel',
     'turnos.guardar':      'Save',
+    'turnos.editar_titulo': 'Edit shift',
 
-    // Informes
+
+      // Informes
     'informes.titulo':      'Reports',
     'informes.periodo':     'Period:',
     'informes.todos_emp':   'All employees',
@@ -589,6 +593,8 @@ function setLang(lang) {
     btn.classList.toggle('lang-btn-active', btn.dataset.lang === lang);
   });
   applyTranslations();
+  window.location.reload();
+
 }
 
 function applyTranslations() {

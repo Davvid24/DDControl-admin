@@ -56,8 +56,7 @@ function renderTable() {
             const metBadge  = f.metodo === 'movil'
                 ? '<span class="badge badge-blue">Móvil</span>'
                 : '<span class="badge badge-gray">Manual</span>';
-            const hora      = f.timestampFicha ? formatTime(f.timestampFicha) : '—';
-
+            const hora = f.timestampFicha ? formatDateTime(f.timestampFicha) : '—';
             return `<tr>
           <td><div class="emp-cell">
             <div class="emp-avatar" style="background:${color}">${ini}</div>
@@ -83,6 +82,13 @@ function renderTable() {
     document.getElementById('pagInfo').textContent =
         `Mostrando ${Math.min(page.length, PAGE_SIZE)} de ${filteredData.length} fichajes`;
     document.getElementById('pagNum').textContent = currentPage;
+}
+function formatDateTime(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    const fecha = d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const hora  = d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    return `<span style="display:block;font-weight:600">${hora}</span><span style="font-size:11px;color:var(--text-muted)">${fecha}</span>`;
 }
 
 function changePage(dir) {

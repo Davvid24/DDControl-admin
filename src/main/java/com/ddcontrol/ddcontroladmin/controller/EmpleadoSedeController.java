@@ -37,4 +37,8 @@ public class EmpleadoSedeController {
         empleadoSedeService.desasignar(idUsuario, idSede);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/resumen-sedes")
+    public List<EmpleadoSedeDTO.ResumenSede> getResumenPorSede() {
+        return empleadoSedeService.getResumenPorSede();
+    }
 }

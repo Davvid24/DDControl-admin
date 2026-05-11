@@ -5,6 +5,10 @@ let resolucionPendiente = null;
 async function cargarSolicitudes() {
     try {
         todasLasSolicitudes = await apiFetch(`${API}/solicitudes`);
+        todasLasSolicitudes.sort((a, b) =>
+            new Date(b.fechaSolicitud) - new Date(a.fechaSolicitud)
+        );
+
         renderTable();
     } catch (e) {
         showToast(e.message || 'Error al cargar solicitudes', 'error');
