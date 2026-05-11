@@ -17,6 +17,12 @@ public class EmpleadoSedeDTO {
 
         private LocalDate fechaAsignacion;
     }
+    @Data
+    public static class ResumenSede {
+        private Integer idSede;
+        private String nombreSede;
+        private Long totalEmpleados;
+    }
 
     @Data
     public static class Response {

@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +59,16 @@ public class EmpleadoSedeService {
         return toResponse(empleadoSedeRepository.save(es));
     }
 
+    public List<EmpleadoSedeDTO.ResumenSede> getResumenPorSede() {
+        return empleadoSedeRepository.getResumen().stream().map(obj -> {
+            EmpleadoSedeDTO.ResumenSede dto = new EmpleadoSedeDTO.ResumenSede();
+            dto.setIdSede((Integer) obj[0]);
+            dto.setNombreSede((String) obj[1]);
+            dto.setTotalEmpleados((Long) obj[2]);
+            return dto;
+
+        }).toList();
+    }
     public void desasignar(Integer idUsuario, Integer idSede) {
         EmpleadoSedeId pk = new EmpleadoSedeId();
         pk.setIdUsuario(idUsuario);
