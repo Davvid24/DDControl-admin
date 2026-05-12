@@ -6,6 +6,8 @@ import com.google.firebase.FirebaseOptions;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PostConstruct;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -15,8 +17,10 @@ public class FirebaseConfig {
     @PostConstruct
     public void initialize() throws IOException {
         if (FirebaseApp.getApps().isEmpty()) {
-            InputStream serviceAccount =
-                    getClass().getClassLoader().getResourceAsStream("firebase-adminsdk.json");
+            String firebaseJson = System.getenv("FIREBASE_CREDENTIALS");
+            InputStream serviceAccount = new ByteArrayInputStream(
+                    firebaseJson.getBytes(java.nio.charset.StandardCharsets.UTF_8)
+            );
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
