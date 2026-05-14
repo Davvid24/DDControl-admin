@@ -1,5 +1,5 @@
 let todosLosFichajes = [];
-let sedes = []; // 👈 IMPORTANTE
+let sedes = [];
 
 async function cargarDashboard() {
     try {
@@ -13,7 +13,7 @@ async function cargarDashboard() {
 
         ]);
 
-        sedes = sedesData; // 👈 guardamos sedes global
+        sedes = sedesData;
 
         todosLosFichajes = fichajes.sort(
             (a, b) => new Date(b.timestampFicha) - new Date(a.timestampFicha)
@@ -23,7 +23,7 @@ async function cargarDashboard() {
 
         document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = activos;
         document.querySelector('.stat-card:nth-child(1) .stat-badge').textContent =
-            `${activos} activos`;
+            `${activos} ${t('comun.activo')}`;
 
         const hoy = new Date().toISOString().slice(0, 10);
 
@@ -69,7 +69,7 @@ async function cargarDashboard() {
             abiertas;
 
         document.querySelector('.stat-card:nth-child(4) .stat-badge').textContent =
-            `${abiertas} hoy`;
+            `${abiertas} ${t('dashboard.hoy')}`;
 
         renderFichajes(todosLosFichajes);
         renderPresenciaSedes(resumenSedes);
@@ -125,12 +125,12 @@ function renderFichajes(data) {
         const ini = initials(nombre);
 
         const tipoBadge = f.tipo === 'entrada'
-            ? '<span class="badge badge-green">Entrada</span>'
-            : '<span class="badge badge-red">Salida</span>';
+            ? `<span class="badge badge-green">${t('comun.entrada')}</span>`
+            : `<span class="badge badge-red">${t('comun.salida')}</span>`;
 
         const gpsBadge = f.dentroDeRadio
-            ? '<span class="badge badge-green">✓ Dentro</span>'
-            : '<span class="badge badge-red">✗ Fuera</span>';
+            ? `<span class="badge badge-green">${t('comun.dentro')}</span>`
+            : `<span class="badge badge-red">${t('comun.fuera')}</span>`;
 
         const hora = f.timestampFicha
             ? formatDateTime(f.timestampFicha)

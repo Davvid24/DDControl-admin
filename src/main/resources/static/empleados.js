@@ -44,8 +44,8 @@ async function cargarSedesYTurnos() {
 
 function estadoBadge(activo) {
     return activo
-        ? '<span class="badge badge-green"><span class="dot dot-green"></span>Activo</span>'
-        : '<span class="badge badge-gray">Inactivo</span>';
+        ? `<span class="badge badge-green"><span class="dot dot-green"></span>${t('empleados.activo')}</span>`
+        : `<span class="badge badge-gray">${t('empleados.inactivo')}</span>`;
 }
 
 function renderTable() {
