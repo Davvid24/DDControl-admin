@@ -55,19 +55,19 @@
                 <option value="Activo">
                 <option value="Inactivo">
             </datalist>
-            <button class="btn btn-ghost" onclick="limpiarFiltros()">Limpiar</button>
-            <button class="btn btn-primary" onclick="abrirModalNuevo()">+ Nuevo empleado</button>
+            <button class="btn btn-ghost" onclick="limpiarFiltros()" data-i18n="empleados.limpiar">Limpiar</button>
+            <button class="btn btn-primary" onclick="abrirModalNuevo()" data-i18n="empleados.nuevo">+ Nuevo empleado</button>
         </div>
         <div style="flex:1;overflow-y:auto;background:white">
             <table id="empleadosTable">
                 <thead><tr>
-                    <th>Empleado</th>
-                    <th>Puesto / Departamento</th>
-                    <th>Sede(s)</th>
+                    <th data-i18n="empleados.col_empleado">Empleado</th>
+                    <th data-i18n="empleados.col_depto">Puesto / Departamento</th>
+                    <th data-i18n="empleados.col_sede">Sede(s)</th>
                     <th>Rol</th>
-                    <th>Estado</th>
-                    <th>Alta</th>
-                    <th>Acciones</th>
+                    <th data-i18n="empleados.col_estado">Estado</th>
+                    <th data-i18n="empleados.col_ult">Alta</th>
+                    <th data-i18n="empleados.col_acc">Acciones</th>
                 </tr></thead>
                 <tbody></tbody>
             </table>
@@ -78,20 +78,20 @@
 <div class="modal-overlay" id="modal-empleado-nuevo">
     <div class="modal">
         <div class="modal-header">
-            <span class="modal-title">Nuevo empleado</span>
-            <button class="modal-close" onclick="closeModal('modal-empleado-nuevo')">×</button>
+            <span class="modal-title" data-i18n="empleados.modal_titulo">Nuevo empleado</span>
+            <button class="modal-close" onclick="closeModal('modal-empleado-nuevo')">x</button>
         </div>
         <div class="modal-body">
             <div class="form-grid form-2col">
-                <div class="field"><label>Nombre</label><input type="text" id="nuevoNombre" placeholder="Nombre"></div>
-                <div class="field"><label>Apellidos</label><input type="text" id="nuevoApellidos" placeholder="Apellidos"></div>
-                <div class="field form-full"><label>Email</label><input type="email" id="nuevoEmail" placeholder="empleado@empresa.com"></div>
-                <div class="field"><label>Contraseña</label><input type="password" id="nuevoPass" placeholder="Mín. 8 caracteres"></div>
-                <div class="field"><label>Teléfono</label><input type="tel" id="nuevoTel" placeholder="600000000"></div>
-                <div class="field"><label>Rol</label>
+                <div class="field"><label data-i18n="empleados.nombre">Nombre</label><input type="text" id="nuevoNombre" placeholder="Nombre"></div>
+                <div class="field"><label data-i18n="empleados.apellidos">Apellidos</label><input type="text" id="nuevoApellidos" placeholder="Apellidos"></div>
+                <div class="field form-full"><label data-i18n="empleados.email">Email</label><input type="email" id="nuevoEmail" placeholder="empleado@empresa.com"></div>
+                <div class="field"><label data-i18n="empleados.password">Contraseña</label><input type="password" id="nuevoPass" placeholder="Mín. 8 caracteres"></div>
+                <div class="field"><label data-i18n="empleados.telefono">Teléfono</label><input type="tel" id="nuevoTel" placeholder="600000000"></div>
+                <div class="field"><label data-i18n="empleados.rol">Rol</label>
                     <select id="nuevoRol"><option>Empleado</option><option>ADMIN</option></select>
                 </div>
-                <div class="field"><label>Puesto</label>
+                <div class="field"><label data-i18n="empleados.tipo">Puesto</label>
                     <select id="nuevoTipo">
                         <option>Comercial</option>
                         <option>RRHH</option>
@@ -102,15 +102,15 @@
                         <option>Otro</option>
                     </select>
                 </div>
-                <div class="field"><label>Sede</label><select id="nuevoSede"></select></div>
-                <div class="field form-full"><label>Turno</label><select id="nuevoTurno"></select></div>
+                <div class="field"><label data-i18n="empleados.sede">Sede</label><select id="nuevoSede"></select></div>
+                <div class="field form-full"><label data-i18n="empleados.turno">Turno</label><select id="nuevoTurno"></select></div>
             </div>
             <div id="nuevoErrorBox" style="display:none;margin-top:12px;padding:12px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#dc2626;font-size:13px;line-height:1.6"></div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('modal-empleado-nuevo')">Cancelar</button>
-            <button class="btn btn-secondary" onclick="limpiarNuevo()">Limpiar</button>
-            <button class="btn btn-primary" onclick="guardarNuevoEmpleado()">Crear empleado</button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-empleado-nuevo')" data-i18n="empleados.cancelar">Cancelar</button>
+            <button class="btn btn-secondary" onclick="limpiarNuevo()" data-i18n="empleados.limpiar">Limpiar</button>
+            <button class="btn btn-primary" onclick="guardarNuevoEmpleado()" data-i18n="empleados.crear">Crear empleado</button>
         </div>
     </div>
 </div>
@@ -118,19 +118,19 @@
 <div class="modal-overlay" id="modal-empleado-editar">
     <div class="modal">
         <div class="modal-header">
-            <span class="modal-title">Editar empleado</span>
-            <button class="modal-close" onclick="closeModal('modal-empleado-editar')">×</button>
+            <span class="modal-title" data-i18n="empleados.modal_editar">Editar empleado</span>
+            <button class="modal-close" onclick="closeModal('modal-empleado-editar')">x</button>
         </div>
         <div class="modal-body">
             <div class="form-grid form-2col">
-                <div class="field"><label>Nombre</label><input type="text" id="editNombre" readonly style="background:#F0F5FB;color:var(--text-muted);cursor:default"></div>
-                <div class="field"><label>Apellidos</label><input type="text" id="editApellidos" readonly style="background:#F0F5FB;color:var(--text-muted);cursor:default"></div>
-                <div class="field form-full"><label>Email</label><input type="email" id="editEmail" readonly style="background:#F0F5FB;color:var(--text-muted);cursor:default"></div>
-                <div class="field"><label>Teléfono</label><input type="tel" id="editTel" placeholder="600000000"></div>
-                <div class="field"><label>Rol</label>
+                <div class="field"><label data-i18n="empleados.nombre">Nombre</label><input type="text" id="editNombre" readonly style="background:#F0F5FB;color:var(--text-muted);cursor:default"></div>
+                <div class="field"><label data-i18n="empleados.apellidos">Apellidos</label><input type="text" id="editApellidos" readonly style="background:#F0F5FB;color:var(--text-muted);cursor:default"></div>
+                <div class="field form-full"><label data-i18n="empleados.email">Email</label><input type="email" id="editEmail" readonly style="background:#F0F5FB;color:var(--text-muted);cursor:default"></div>
+                <div class="field"><label data-i18n="empleados.telefono">Teléfono</label><input type="tel" id="editTel" placeholder="600000000"></div>
+                <div class="field"><label data-i18n="empleados.rol">Rol</label>
                     <select id="editRol"><option>Empleado</option><option>ADMIN</option></select>
                 </div>
-                <div class="field"><label>Puesto</label>
+                <div class="field"><label data-i18n="empleados.tipo">Puesto</label>
                     <select id="editTipo">
                         <option>Comercial</option>
                         <option>RRHH</option>
@@ -141,19 +141,17 @@
                         <option>Otro</option>
                     </select>
                 </div>
-                <div class="field"><label>Sede</label><select id="editSede"></select></div>
-                <div class="field"><label>Turno</label><select id="editTurno"></select></div>
+                <div class="field"><label data-i18n="empleados.sede">Sede</label><select id="editSede"></select></div>
+                <div class="field"><label data-i18n="empleados.turno">Turno</label><select id="editTurno"></select></div>
                 <div class="field form-full">
-                    <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="abrirModalPassword()">
-                        🔑 Cambiar contraseña
-                    </button>
+                    <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="abrirModalPassword()" data-i18n="empleados.cambiar_pass">Cambiar contraseña</button>
                 </div>
             </div>
             <div id="editErrorBox" style="display:none;margin-top:12px;padding:12px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#dc2626;font-size:13px;line-height:1.6"></div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('modal-empleado-editar')">Cancelar</button>
-            <button class="btn btn-primary" onclick="guardarEdicionEmpleado()">Guardar cambios</button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-empleado-editar')" data-i18n="empleados.cancelar">Cancelar</button>
+            <button class="btn btn-primary" onclick="guardarEdicionEmpleado()" data-i18n="empleados.guardar">Guardar cambios</button>
         </div>
     </div>
 </div>
@@ -161,16 +159,16 @@
 <div class="modal-overlay" id="modal-cambiar-pass">
     <div class="modal" style="max-width:420px">
         <div class="modal-header">
-            <span class="modal-title">Cambiar contraseña</span>
-            <button class="modal-close" onclick="closeModal('modal-cambiar-pass')">×</button>
+            <span class="modal-title" data-i18n="empleados.modal_pass">Cambiar contraseña</span>
+            <button class="modal-close" onclick="closeModal('modal-cambiar-pass')">x</button>
         </div>
         <div class="modal-body">
             <div style="background:#FFF8E6;border:1px solid #F59E0B;border-radius:8px;padding:12px 14px;font-size:13px;color:#92400E;margin-bottom:16px">
-                ⚠️ Estás a punto de cambiar la contraseña de este empleado. Esta acción no se puede deshacer.
+                ¡Estás a punto de cambiar la contraseña de este empleado. Esta acción no se puede deshacer!.
             </div>
             <div class="form-grid">
                 <div class="field">
-                    <label>Nueva contraseña</label>
+                    <label data-i18n="empleados.nueva_pass">Nueva contraseña</label>
                     <input type="password" id="newPass" placeholder="Mín. 8 caracteres" oninput="checkPassStrength(this.value)">
                     <div style="height:4px;border-radius:2px;margin-top:6px;background:#EBF2FB;overflow:hidden">
                         <div id="passStrengthBar" style="height:100%;border-radius:2px;transition:width .3s,background .3s;width:0%;background:#E84855"></div>
@@ -178,15 +176,15 @@
                     <span id="passStrengthLabel" style="font-size:11px;color:var(--text-label);margin-top:4px"></span>
                 </div>
                 <div class="field">
-                    <label>Confirmar contraseña</label>
+                    <label data-i18n="empleados.confirmar_pass">Confirmar contraseña</label>
                     <input type="password" id="confirmPass" placeholder="Repite la contraseña">
                 </div>
             </div>
             <div id="passErrorBox" style="display:none;margin-top:12px;padding:12px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#dc2626;font-size:13px"></div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('modal-cambiar-pass')">Cancelar</button>
-            <button class="btn btn-danger" onclick="confirmarCambioPassword()">Confirmar cambio</button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-cambiar-pass')" data-i18n="empleados.cancelar">Cancelar</button>
+            <button class="btn btn-danger" onclick="confirmarCambioPassword()" data-i18n="empleados.confirmar_cambio">Confirmar cambio</button>
         </div>
     </div>
 </div>

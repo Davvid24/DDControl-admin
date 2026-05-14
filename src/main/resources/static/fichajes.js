@@ -45,17 +45,19 @@ function renderTable() {
             const nombre    = f.nombreUsuario || '—';
             const color     = avatarColor(nombre);
             const ini       = initials(nombre);
-            const tipoBadge = f.tipo === 'entrada'      ? '<span class="badge badge-green">Entrada</span>'
-                : f.tipo === 'salida'       ? '<span class="badge badge-red">Salida</span>'
-                    : f.tipo === 'pausa_inicio' ? '<span class="badge badge-yellow">Pausa inicio</span>'
-                        : f.tipo === 'pausa_fin'    ? '<span class="badge badge-blue">Pausa fin</span>'
+            const tipoBadge = f.tipo === 'entrada'      ? `<span class="badge badge-green">${t('comun.entrada')}</span>`
+                : f.tipo === 'salida'       ? `<span class="badge badge-red">${t('comun.salida')}</span>`
+                    : f.tipo === 'pausa_inicio' ? `<span class="badge badge-yellow">${t('fichajes.pausa_ini')}</span>`
+                        : f.tipo === 'pausa_fin'    ? `<span class="badge badge-blue">${t('fichajes.pausa_fin')}</span>`
                             : `<span class="badge badge-gray">${f.tipo}</span>`;
-            const gpsBadge  = f.dentroDeRadio
-                ? '<span class="badge badge-green">✓ Dentro</span>'
-                : '<span class="badge badge-red">✗ Fuera</span>';
-            const metBadge  = f.metodo === 'movil'
-                ? '<span class="badge badge-blue">Móvil</span>'
-                : '<span class="badge badge-gray">Manual</span>';
+
+            const gpsBadge = f.dentroDeRadio
+                ? `<span class="badge badge-green">${t('comun.dentro')}</span>`
+                : `<span class="badge badge-red">${t('comun.fuera')}</span>`;
+
+            const metBadge = f.metodo === 'movil'
+                ? `<span class="badge badge-blue">${t('fichajes.movil')}</span>`
+                : `<span class="badge badge-gray">${t('fichajes.manual')}</span>`;
             const hora = f.timestampFicha ? formatDateTime(f.timestampFicha) : '—';
             return `<tr>
           <td><div class="emp-cell">
@@ -69,8 +71,8 @@ function renderTable() {
           <td>${metBadge}</td>
           <td><div class="actions">
             <button class="act-btn act-delete"
-              onclick="confirmDelete('¿Eliminar este fichaje?', () => eliminarFichaje(${f.id}))">
-              Eliminar
+            onclick="confirmDelete('¿Eliminar este fichaje?', () => eliminarFichaje(${f.id}))">
+            ${t('accion.eliminar')}
             </button>
           </div></td>
         </tr>`;
