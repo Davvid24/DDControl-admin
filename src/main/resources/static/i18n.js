@@ -24,7 +24,7 @@ const TRANSLATIONS = {
     'dashboard.sol_pendientes':   'Solicitudes pendientes',
     'dashboard.inc_abiertas':     'Incidencias abiertas',
     'dashboard.ultimos_fichajes': 'Últimos fichajes',
-    'dashboard.ver_todos':        'Ver todos →',
+    'dashboard.ver_todos':        'Ver todos',
     'dashboard.presencia_sede':   'Presencia por sede',
     'dashboard.acciones_rapidas': 'Acciones rápidas',
     'dashboard.nuevo_fichaje':    'Nuevo fichaje manual',
@@ -37,6 +37,7 @@ const TRANSLATIONS = {
     'dashboard.col_sede':         'Sede',
     'dashboard.col_gps':          'GPS',
     'dashboard.no_fichajes':      'No hay fichajes registrados',
+    'dashboard.hoy': 'hoy',
 
     // Fichajes
     'fichajes.titulo':       'Registro de Fichajes',
@@ -67,6 +68,8 @@ const TRANSLATIONS = {
     'fichajes.cancelar':     'Cancelar',
     'fichajes.registrar':    'Registrar fichaje',
     'fichajes.eliminar':     'Eliminar',
+    'fichajes.pausa_ini': 'Pausa inicio',
+    'fichajes.pausa_fin': 'Pausa fin',
 
     // Solicitudes 
     'solicitudes.titulo':      'Solicitudes',
@@ -107,6 +110,9 @@ const TRANSLATIONS = {
     'incidencias.abierta':       'Abierta',
     'incidencias.resolver':      'Resolver',
     'incidencias.no_data':       'No hay incidencias abiertas',
+    'incidencias.resuelta':      'Resuelta',
+    'incidencias.sin_resueltas': 'No hay incidencias resueltas',
+    'incidencias.volver':        'Volver a abiertas',
 
     // Empleados
     'empleados.titulo':      'Empleados',
@@ -139,6 +145,14 @@ const TRANSLATIONS = {
     'empleados.crear':       'Crear empleado',
     'empleados.tipo':'Puesto',
     'empleados.col_depto':   'Puesto / Depto.',
+    'empleados.limpiar': 'Limpiar',
+    'empleados.modal_editar':    'Editar empleado',
+    'empleados.guardar':         'Guardar cambios',
+    'empleados.cambiar_pass':    'Cambiar contraseña',
+    'empleados.modal_pass':      'Cambiar contraseña',
+    'empleados.nueva_pass':      'Nueva contraseña',
+    'empleados.confirmar_pass':  'Confirmar contraseña',
+    'empleados.confirmar_cambio':'Confirmar cambio',
 
     // Sedes
     'sedes.titulo':          'Sedes',
@@ -313,7 +327,7 @@ const TRANSLATIONS = {
     'dashboard.sol_pendientes':   'Pending requests',
     'dashboard.inc_abiertas':     'Open incidents',
     'dashboard.ultimos_fichajes': 'Latest clock-ins',
-    'dashboard.ver_todos':        'View all →',
+    'dashboard.ver_todos':        'View all',
     'dashboard.presencia_sede':   'Attendance by branch',
     'dashboard.acciones_rapidas': 'Quick actions',
     'dashboard.nuevo_fichaje':    'New manual clock-in',
@@ -326,6 +340,8 @@ const TRANSLATIONS = {
     'dashboard.col_sede':         'Branch',
     'dashboard.col_gps':          'GPS',
     'dashboard.no_fichajes':      'No clock-ins registered',
+    'dashboard.hoy': 'today',
+
 
     // Fichajes
     'fichajes.titulo':       'Clock-in Register',
@@ -356,6 +372,8 @@ const TRANSLATIONS = {
     'fichajes.cancelar':     'Cancel',
     'fichajes.registrar':    'Register clock-in',
     'fichajes.eliminar':     'Delete',
+    'fichajes.pausa_ini': 'Break start',
+    'fichajes.pausa_fin': 'Break end',
 
     // Solicitudes
     'solicitudes.titulo':      'Requests',
@@ -396,6 +414,9 @@ const TRANSLATIONS = {
     'incidencias.abierta':       'Open',
     'incidencias.resolver':      'Resolve',
     'incidencias.no_data':       'No open incidents',
+    'incidencias.resuelta':      'Resolved',
+    'incidencias.sin_resueltas': 'No resolved incidents',
+    'incidencias.volver':        'Back to open',
 
     // Empleados
     'empleados.titulo':      'Employees',
@@ -428,6 +449,14 @@ const TRANSLATIONS = {
     'empleados.crear':       'Create employee',
     'empleados.tipo':        'Position',
     'empleados.col_depto':   'Position / Dept.',
+    'empleados.limpiar': 'Clear',
+    'empleados.modal_editar':    'Edit employee',
+    'empleados.guardar':         'Save changes',
+    'empleados.cambiar_pass':    'Change password',
+    'empleados.modal_pass':      'Change password',
+    'empleados.nueva_pass':      'New password',
+    'empleados.confirmar_pass':  'Confirm password',
+    'empleados.confirmar_cambio':'Confirm change',
 
     // Sedes
     'sedes.titulo':          'Branches',

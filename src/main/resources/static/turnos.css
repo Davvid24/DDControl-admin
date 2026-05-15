@@ -1,0 +1,7 @@
+.turnos-layout { display:flex; gap:20px; align-items:flex-start; }
+.turnos-table  { flex:1; min-width:0; }
+.turnos-form   { width:300px; flex-shrink:0; }
+.day-toggles   { display:flex; gap:6px; }
+.day-btn { width:34px; height:34px; border-radius:var(--radius-sm); border:none; font-family:var(--font); font-size:13px; font-weight:700; cursor:pointer; transition:all var(--transition); }
+.day-on  { background:var(--blue); color:white; }
+.day-off { background:var(--blue-light); color:var(--text-muted); }

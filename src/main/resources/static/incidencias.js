@@ -19,7 +19,9 @@ function renderTable() {
 
     const btnHistorial = document.getElementById('btn-historial');
     if (btnHistorial) {
-        btnHistorial.textContent = viendoHistorial ? '← Volver a abiertas' : `Ver historial (${resueltas.length})`;
+        btnHistorial.textContent = viendoHistorial
+            ? t('incidencias.volver')
+            : `${t('incidencias.ver_hist')} (${resueltas.length})`;
     }
 
     const data = viendoHistorial
@@ -29,7 +31,7 @@ function renderTable() {
     const thead = document.querySelector('#incidenciasTable thead tr');
     if (thead) {
         const ultimaCol = thead.querySelector('th:last-child');
-        if (ultimaCol) ultimaCol.textContent = viendoHistorial ? 'Estado' : 'Acciones';
+        if (ultimaCol) ultimaCol.textContent = viendoHistorial ? t('incidencias.col_estado') : t('incidencias.col_acc');
     }
 
     document.querySelector('#incidenciasTable tbody').innerHTML = data.length
@@ -44,8 +46,8 @@ function renderTable() {
                         : 'badge-gray';
 
             const estadoBadge = i.resuelta
-                ? '<span class="badge badge-green">Resuelta</span>'
-                : '<span class="badge badge-red">Abierta</span>';
+                ? `<span class="badge badge-green">${t('incidencias.resuelta')}</span>`
+                : `<span class="badge badge-red">${t('incidencias.abierta')}</span>`;
 
             const ultimaCol = viendoHistorial
                 ? `<td>${estadoBadge}</td>`
@@ -61,12 +63,12 @@ function renderTable() {
           </div></td>
           <td style="color:var(--text-muted);max-width:300px">${i.descripcion || '—'}</td>
           <td><code style="font-family:var(--mono);font-size:11px">${formatDateTime(i.fecha)}</code></td>
-          <td><span class="badge badge-red" ${i.resuelta ? 'style="display:none"' : ''}>Abierta</span></td>
+          <td><span class="badge badge-red" ${i.resuelta ? 'style="display:none"' : ''}>${t('incidencias.abierta')}</span></td>
           ${ultimaCol}
         </tr>`;
         }).join('')
         : `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--text-label);font-size:15px">
-         ${viendoHistorial ? 'No hay incidencias resueltas' : 'No hay incidencias abiertas'}
+         ${viendoHistorial ? t('incidencias.sin_resueltas') : t('incidencias.no_data')}
        </td></tr>`;
 }
 

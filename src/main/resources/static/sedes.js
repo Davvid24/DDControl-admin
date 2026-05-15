@@ -89,8 +89,8 @@ function renderTable() {
         </td>
         <td><code style="font-family:var(--mono);font-size:12px">${s.radioMetros} m</code></td>
         <td>${s.activa
-            ? '<span class="badge badge-green">Activa</span>'
-            : '<span class="badge badge-gray">Inactiva</span>'}</td>
+            ? `<span class="badge badge-green">${t('sedes.activa')}</span>`
+            : `<span class="badge badge-gray">${t('sedes.inactiva')}</span>`}</td>
         <td><div class="actions">
           <button class="act-btn act-edit"   onclick="event.stopPropagation();editarSede(${s.id})">${t('accion.editar')}</button>
           <button class="act-btn act-delete" onclick="event.stopPropagation();confirmDelete('¿Eliminar esta sede?',()=>eliminarSede(${s.id}))">${t('accion.eliminar')}</button>
