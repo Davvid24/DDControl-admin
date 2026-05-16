@@ -74,7 +74,7 @@ public class SolicitudService {
         Solicitud guardada = solicitudRepository.save(s);
 
         boolean aprobada = req.getEstado().equalsIgnoreCase("APROBADA");
-        String titulo  = aprobada ? "✅ Solicitud aprobada" : "❌ Solicitud rechazada";
+        String titulo  = aprobada ? "Solicitud aprobada" : "Solicitud rechazada";
         String cuerpo  = "Tu solicitud de " + s.getTipo() + " del " + s.getFechaInicio()
                 + " al " + s.getFechaFin()
                 + (aprobada ? " ha sido aprobada." : " ha sido rechazada.");
