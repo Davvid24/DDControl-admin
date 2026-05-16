@@ -77,7 +77,7 @@ public class IncidenciaService {
             if (token != null && !token.isBlank()) {
                 fcmService.enviarNotificacion(
                         token,
-                        "✅ Incidencia resuelta",
+                        "Incidencia resuelta",
                         "Tu incidencia de tipo " + i.getTipo() + " ha sido resuelta.",
                         "incidencia"
                 );
