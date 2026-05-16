@@ -29,15 +29,6 @@ public class AuthController {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED, "Credenciales incorrectas"));
 
-        System.out.println("=== DEBUG LOGIN ===");
-        System.out.println("Email:    " + usuario.getEmail());
-        System.out.println("Hash BD:  " + usuario.getPasswordHash());
-        System.out.println("Hash len: " + usuario.getPasswordHash().length());
-        System.out.println("Pass req: " + req.getPassword());
-        System.out.println("Matches:  " + passwordEncoder.matches(req.getPassword(), usuario.getPasswordHash()));
-        System.out.println("Activo:   " + usuario.getActivo());
-        System.out.println("===================");
-
         if (!passwordEncoder.matches(req.getPassword(), usuario.getPasswordHash()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas");
 
